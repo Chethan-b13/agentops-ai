@@ -1,0 +1,144 @@
+# =========================
+# Python
+# =========================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# =========================
+# Virtual Environments
+# =========================
+.venv/
+venv/
+env/
+ENV/
+
+# =========================
+# uv
+# =========================
+# Keep uv.lock committed for reproducible builds
+# uv.lock
+
+# Local uv cache (if created in project)
+.uv/
+
+# =========================
+# Environment Variables / Secrets
+# =========================
+.env
+.env.*
+*.env
+
+# Allow example env files
+!.env.example
+
+# Common secret files
+secrets/
+credentials/
+*.pem
+*.key
+*.crt
+
+# =========================
+# Agentic AI / LLM
+# =========================
+# Model downloads
+models/
+checkpoints/
+weights/
+
+# Vector databases
+chroma/
+chromadb/
+qdrant_storage/
+faiss_index/
+vectorstore/
+vectorstores/
+
+# Agent memory & runtime data
+memory/
+sessions/
+runs/
+artifacts/
+workspace/
+
+# Logs
+logs/
+*.log
+
+# Cached responses
+.cache/
+cache/
+
+# =========================
+# Jupyter
+# =========================
+.ipynb_checkpoints/
+
+# =========================
+# Testing
+# =========================
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+
+# =========================
+# Type Checkers / Linters
+# =========================
+.mypy_cache/
+.pyre/
+.pytype/
+.ruff_cache/
+
+# =========================
+# IDEs
+# =========================
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# =========================
+# OS Files
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# Data Files (optional)
+# Uncomment if datasets are large
+# =========================
+# data/
+# datasets/
+# *.csv
+# *.parquet
+# *.jsonl
+
+# =========================
+# Streamlit
+# =========================
+.streamlit/secrets.toml
+
+# =========================
+# LangSmith / OpenAI Traces
+# =========================
+traces/
