@@ -1,0 +1,15 @@
+[project]
+name = "api"
+version = "0.1.0"
+
+dependencies = [
+    "fastapi",
+    "uvicorn[standard]",
+    "pydantic-settings",
+    "alembic>=1.18.4",
+    "sqlalchemy",
+    "shared",
+]
+
+[tool.uv.sources]
+shared = { workspace = true }

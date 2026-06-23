@@ -59,7 +59,7 @@ credentials/
 # Agentic AI / LLM
 # =========================
 # Model downloads
-models/
+# models/
 checkpoints/
 weights/
 

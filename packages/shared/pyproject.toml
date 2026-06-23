@@ -1,0 +1,9 @@
+[project]
+name = "shared"
+version = "0.1.0"
+
+dependencies = [
+    "pydantic-settings",
+    "sqlalchemy",
+    "psycopg[binary]",
+]
