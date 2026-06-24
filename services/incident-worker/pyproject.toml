@@ -2,4 +2,10 @@
 name = "incident-worker"
 version = "0.1.0"
 
-dependencies = []
+dependencies = [
+    "boto3>=1.43.36",
+    "shared"
+]
+
+[tool.uv.sources]
+shared = { workspace = true }

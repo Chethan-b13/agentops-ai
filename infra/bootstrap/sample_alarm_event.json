@@ -1,0 +1,7 @@
+[
+  {
+    "Source": "aws.cloudwatch",
+    "DetailType": "CloudWatch Alarm State Change",
+    "Detail": "{\"alarmName\":\"High CPU Usage\",\"service\":\"payments-api\",\"metricName\":\"CPUUtilization\",\"threshold\":80,\"currentValue\":94}"
+  }
+]
