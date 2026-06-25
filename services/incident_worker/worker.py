@@ -2,11 +2,15 @@ import json
 import boto3
 
 from mappers.incident_mapper import map_event_to_incident
+from context_collector import ContextCollector
 
 from shared.database.session import SessionLocal
 from shared.repositories.incident_repository import IncidentRepository
 from shared.settings import settings
 
+from shared.repositories.incident_evidence_repository import (
+    IncidentEvidenceRepository,
+)
 
 
 def main():
@@ -38,12 +42,27 @@ def main():
 
     repository = IncidentRepository(db)
 
+    evidence_repository = IncidentEvidenceRepository(db)
+
+    context_collector = ContextCollector(
+        repository,
+        evidence_repository,
+    )
+
     try:
         incident = map_event_to_incident(body)
 
-        repository.create(incident)
+        incident = repository.create(incident)
 
         print(f"Created incident: {incident.id}")
+
+        context_collector.collect(
+            incident.id,
+        )
+
+        print(
+            f"Evidence collected for {incident.id}"
+        )
 
         sqs.delete_message(
             QueueUrl=settings.sqs_queue_url,
@@ -52,7 +71,17 @@ def main():
 
         print("Message deleted")
     except Exception as e:
-        print(f"Failed processing message: {e}")
+        if "incident" in locals():
+            repository.update_status(
+                incident.id,
+                "failed",
+            )
+
+        print(
+            f"Failed processing message: {e}"
+        )
+
+        raise
     finally:
         db.close()
 

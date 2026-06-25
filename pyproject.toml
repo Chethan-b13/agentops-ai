@@ -6,6 +6,6 @@ requires-python = ">=3.12"
 [tool.uv.workspace]
 members = [
     "apps/api",
-    "services/incident-worker",
+    "services/incident_worker",
     "packages/shared"
 ]

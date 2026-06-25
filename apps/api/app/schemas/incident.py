@@ -35,6 +35,7 @@ class IncidentListResponse(BaseModel):
 class IncidentStatus(str, Enum):
     NEW = "new"
     COLLECTING_EVIDENCE = "collecting_evidence"
+    EVIDENCE_COLLECTED = "evidence_collected"
     TRIAGING = "triaging"
     INVESTIGATING = "investigating"
     FIX_RECOMMENDED = "fix_recommended"
