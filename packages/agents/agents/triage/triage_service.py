@@ -22,12 +22,12 @@ class TriageService:
         incident_repo: IncidentRepository,
         evidence_repo: IncidentEvidenceRepository,
         triage_repo: TriageRepository,
+        triage_agent: TriageAgent
     ):
         self.incident_repo = incident_repo
         self.evidence_repo = evidence_repo
         self.triage_repo = triage_repo
-
-        self.agent = TriageAgent()
+        self.agent = triage_agent
 
     def triage(self, incident_id: str):
         

@@ -4,8 +4,10 @@ version = "0.1.0"
 
 dependencies = [
     "boto3>=1.43.36",
-    "shared"
+    "shared",
+    "workflows",
 ]
 
 [tool.uv.sources]
 shared = { workspace = true }
+workflows = { workspace = true }

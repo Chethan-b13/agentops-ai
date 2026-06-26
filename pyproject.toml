@@ -8,5 +8,6 @@ members = [
     "apps/api",
     "services/incident_worker",
     "packages/shared",
-    "packages/agents"
+    "packages/agents",
+    "packages/workflows",
 ]

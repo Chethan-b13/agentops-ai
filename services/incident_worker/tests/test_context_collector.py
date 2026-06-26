@@ -7,7 +7,7 @@ from shared.repositories.incident_evidence_repository import (
     IncidentEvidenceRepository,
 )
 
-from context_collector import ContextCollector
+from shared.services.context_collector import ContextCollector
 
 
 db = SessionLocal()
