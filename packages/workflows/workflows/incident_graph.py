@@ -11,7 +11,7 @@ from workflows.state import IncidentWorkflowState
 from workflows.nodes.collect_evidence import create_collect_evidence_node
 from workflows.nodes.triage import create_triage_node
 from workflows.workflow_context import WorkflowContext
-from workflows.routes.triage import route_after_triage
+from workflows.routers.triage import route_after_triage
 
 
 def create_incident_graph(
