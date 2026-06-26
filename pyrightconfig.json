@@ -1,0 +1,8 @@
+{
+  "executionEnvironments": [
+    {
+      "root": ".",
+      "extraPaths": ["packages/agents", "packages/shared", "packages/workflows", "services/incident_worker"]
+    }
+  ]
+}

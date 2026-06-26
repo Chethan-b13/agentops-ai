@@ -4,9 +4,6 @@ from langgraph.graph import (
     StateGraph,
 )
 
-from agents.triage.triage_service import TriageService
-from shared.services.context_collector import ContextCollector
-
 from workflows.state import IncidentWorkflowState
 from workflows.nodes.collect_evidence import create_collect_evidence_node
 from workflows.nodes.triage import create_triage_node
