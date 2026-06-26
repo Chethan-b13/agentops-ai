@@ -7,5 +7,6 @@ requires-python = ">=3.12"
 members = [
     "apps/api",
     "services/incident_worker",
-    "packages/shared"
+    "packages/shared",
+    "packages/agents"
 ]

@@ -1,7 +1,7 @@
 from datetime import datetime
-from enum import Enum
 from pydantic import BaseModel
 
+from shared.schemas.incident import IncidentStatus
 
 class IncidentResponse(BaseModel):
     id: str
@@ -31,18 +31,6 @@ class IncidentResponse(BaseModel):
 
 class IncidentListResponse(BaseModel):
     incidents: list[IncidentResponse]
-
-class IncidentStatus(str, Enum):
-    NEW = "new"
-    COLLECTING_EVIDENCE = "collecting_evidence"
-    EVIDENCE_COLLECTED = "evidence_collected"
-    TRIAGING = "triaging"
-    INVESTIGATING = "investigating"
-    FIX_RECOMMENDED = "fix_recommended"
-    AWAITING_APPROVAL = "awaiting_approval"
-    APPROVED = "approved"
-    RESOLVED = "resolved"
-    FAILED = "failed"
 
 class UpdateIncidentStatusRequest(BaseModel):
     status: IncidentStatus
