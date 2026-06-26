@@ -10,11 +10,12 @@ from shared.services.context_collector import ContextCollector
 from workflows.state import IncidentWorkflowState
 from workflows.nodes.collect_evidence import create_collect_evidence_node
 from workflows.nodes.triage import create_triage_node
+from workflows.workflow_context import WorkflowContext
+from workflows.routes.triage import route_after_triage
 
 
 def create_incident_graph(
-    context_collector: ContextCollector,
-    triage_service: TriageService,
+    workflow_context: WorkflowContext
 ):
 
     builder = StateGraph(
@@ -24,14 +25,14 @@ def create_incident_graph(
     builder.add_node(
         "collect_evidence",
         create_collect_evidence_node(
-            context_collector
+            workflow_context.context_collector,
         ),
     )
 
     builder.add_node(
         "triage",
         create_triage_node(
-            triage_service,
+            workflow_context.triage_service,
         ),
     )
 
@@ -45,9 +46,13 @@ def create_incident_graph(
         "triage",
     )
 
-    builder.add_edge(
+    builder.add_conditional_edges(
         "triage",
-        END,
+        route_after_triage,
+        {
+            "continue": END,
+            "human_review": END,
+        },
     )
 
     graph = builder.compile(

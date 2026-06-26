@@ -10,10 +10,13 @@ def create_triage_node(
         state: IncidentWorkflowState,
     ) -> IncidentWorkflowState:
 
-        triage_service.triage(
+        result = triage_service.triage(
             state["incident_id"],
         )
 
-        return state
+        return {
+            **state,
+            "triage_result": result,
+        }
 
     return triage_node

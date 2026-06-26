@@ -15,6 +15,7 @@ from agents.triage.triage_agent import TriageAgent
 from agents.triage.triage_service import TriageService
 
 from workflows.incident_graph import create_incident_graph
+from workflows.workflow_context import WorkflowContext
 
 
 def main():
@@ -63,9 +64,13 @@ def main():
         triage_agent=triage_agent
     )
 
-    graph = create_incident_graph(
+    workflow_context = WorkflowContext(
         context_collector=context_collector,
         triage_service=triage_service,
+    )
+
+    graph = create_incident_graph(
+        workflow_context
     )
 
     try:
