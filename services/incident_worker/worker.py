@@ -2,14 +2,14 @@ import json
 import boto3
 
 from mappers.incident_mapper import map_event_to_incident
-from shared.services.context_collector import ContextCollector
 
+from shared.services.context_collector import ContextCollector
 from shared.database.session import SessionLocal
 from shared.repositories.incident_repository import IncidentRepository
 from shared.settings import settings
-
 from shared.repositories.incident_evidence_repository import IncidentEvidenceRepository
 from shared.repositories.triage_repository import TriageRepository
+from shared.services.knowledge_retriever import KnowledgeRetriever
 
 from agents.triage.triage_agent import TriageAgent
 from agents.triage.triage_service import TriageService
@@ -64,9 +64,12 @@ def main():
         triage_agent=triage_agent
     )
 
+    knowledge_retriever = KnowledgeRetriever()
+
     workflow_context = WorkflowContext(
         context_collector=context_collector,
         triage_service=triage_service,
+        knowledge_retriever=knowledge_retriever
     )
 
     graph = create_incident_graph(

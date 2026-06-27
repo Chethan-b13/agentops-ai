@@ -9,6 +9,7 @@ from workflows.nodes.collect_evidence import create_collect_evidence_node
 from workflows.nodes.triage import create_triage_node
 from workflows.workflow_context import WorkflowContext
 from workflows.routers.triage import route_after_triage
+from workflows.nodes.retrieve_knowledge import create_retrieve_knowledge_node
 
 
 def create_incident_graph(
@@ -33,6 +34,13 @@ def create_incident_graph(
         ),
     )
 
+    builder.add_node(
+        "retrieve_knowledge",
+        create_retrieve_knowledge_node(
+            workflow_context.knowledge_retriever,
+        ),
+    )
+
     builder.add_edge(
         START,
         "collect_evidence",
@@ -47,7 +55,7 @@ def create_incident_graph(
         "triage",
         route_after_triage,
         {
-            "continue": END,
+            "continue": "retrieve_knowledge",
             "human_review": END,
         },
     )
