@@ -25,6 +25,10 @@ from shared.repositories.remediation_repository import RemediationRepository
 from agents.remediation.remediation_agent import RemediationAgent
 from agents.remediation.remediation_service import RemediationService
 
+from shared.repositories.validation_repository import ValidationRepository
+from agents.validation.validation_agent import ValidationAgent
+from agents.validation.validation_service import ValidationService
+
 
 def main():
     sqs = boto3.client(
@@ -99,12 +103,24 @@ def main():
         )
     )
 
+    validation_repository = ValidationRepository(db)
+
+    validation_agent = ValidationAgent()
+
+    validation_service = ValidationService(
+        incident_repo=repository,
+        evidence_repo=evidence_repository,
+        validation_repo=validation_repository,
+        validation_agent=validation_agent,
+    )
+
     workflow_context = WorkflowContext(
         context_collector=context_collector,
         triage_service=triage_service,
         knowledge_retriever=knowledge_retriever,
         rca_service=rca_service,
-        remediation_service=remediation_service
+        remediation_service=remediation_service,
+        validation_service=validation_service
     )
 
     graph = create_investigation_graph(
