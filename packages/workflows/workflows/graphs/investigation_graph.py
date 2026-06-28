@@ -22,7 +22,8 @@ from workflows.routers import (
 
 
 def create_investigation_graph(
-    workflow_context: WorkflowContext
+    workflow_context: WorkflowContext,
+    checkpointer
 ):
 
     builder = StateGraph(
@@ -124,7 +125,8 @@ def create_investigation_graph(
     )
 
     graph = builder.compile(
-        name="investigation_workflow"
+        checkpointer=checkpointer,
+        name="investigation_workflow",
     )
 
     return graph

@@ -1,6 +1,8 @@
 import json
 import boto3
 
+from langgraph.checkpoint.memory import MemorySaver
+
 from mappers.incident_mapper import map_event_to_incident
 
 from shared.services.context_collector import ContextCollector
@@ -123,9 +125,13 @@ def main():
         validation_service=validation_service
     )
 
+    memory = MemorySaver()
+
     graph = create_investigation_graph(
-        workflow_context
+        workflow_context,
+        checkpointer=memory,
     )
+
 
     try:
         incident = map_event_to_incident(body)
@@ -134,10 +140,16 @@ def main():
 
         print(f"Created incident: {incident.id}")
 
+        config = {
+            "configurable": {
+                "thread_id": incident.id
+            }
+        }
         state = graph.invoke(
             {
                 "incident_id": incident.id,
-            }
+            },
+            config=config,
         )
 
         print(state)
