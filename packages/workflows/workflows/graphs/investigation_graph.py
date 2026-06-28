@@ -11,7 +11,8 @@ from workflows.nodes import (
     create_rca_node,
     create_collect_evidence_node,
     create_triage_node,
-    human_review_node
+    human_review_node,
+    create_remediation_node
 )
 from workflows.routers import (
     route_after_triage,
@@ -60,6 +61,13 @@ def create_investigation_graph(
         human_review_node,
     )
 
+    builder.add_node(
+        "remediation",
+        create_remediation_node(
+            workflow_context.remediation_service,
+        ),
+    )
+
     builder.add_edge(
         START,
         "collect_evidence",
@@ -88,9 +96,14 @@ def create_investigation_graph(
         "rca",
         route_after_rca,
         {
-            "continue": END,
+            "continue": "remediation",
             "human_review": "human_review",
         },
+    )
+
+    builder.add_edge(
+        "remediation",
+        END,
     )
 
     builder.add_edge(

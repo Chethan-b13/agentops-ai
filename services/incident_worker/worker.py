@@ -21,6 +21,10 @@ from agents.rca.rca_service import RCAService
 from workflows.graphs.investigation_graph import create_investigation_graph
 from workflows.workflow_context import WorkflowContext
 
+from shared.repositories.remediation_repository import RemediationRepository
+from agents.remediation.remediation_agent import RemediationAgent
+from agents.remediation.remediation_service import RemediationService
+
 
 def main():
     sqs = boto3.client(
@@ -77,11 +81,30 @@ def main():
         rca_agent=rca_agent,
     )
 
+
+    remediation_repository = (
+        RemediationRepository(db)
+    )
+
+    remediation_agent = (
+        RemediationAgent()
+    )
+
+    remediation_service = (
+        RemediationService(
+            incident_repo=repository,
+            evidence_repo=evidence_repository,
+            remediation_repo=remediation_repository,
+            remediation_agent=remediation_agent,
+        )
+    )
+
     workflow_context = WorkflowContext(
         context_collector=context_collector,
         triage_service=triage_service,
         knowledge_retriever=knowledge_retriever,
-        rca_service=rca_service
+        rca_service=rca_service,
+        remediation_service=remediation_service
     )
 
     graph = create_investigation_graph(
