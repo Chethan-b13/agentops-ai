@@ -6,12 +6,21 @@ from mappers.incident_mapper import map_event_to_incident
 
 from shared.database.session import SessionLocal
 from shared.settings import settings
+from shared.repositories.incident_repository import IncidentRepository
+
+from shared.telemetry import initialize_tracing
+from shared.telemetry import get_tracer
+from shared.telemetry import set_incident_context
 
 from workflows.factory import create_workflow
-from shared.repositories.incident_repository import IncidentRepository
 
 
 def main():
+
+    initialize_tracing(
+        service_name="incident-worker",
+    )
+    tracer = get_tracer(__name__)
 
     sqs = boto3.client(
         "sqs",
@@ -60,18 +69,28 @@ def main():
                 }
             }
 
-            state = graph.invoke(
-                {
-                    "incident_id": incident.id,
-                },
-                config=config,
-            )
+            with tracer.start_as_current_span("Incident Workflow") as span:
 
-            print(state)
+                set_incident_context(
+                    incident_id=incident.id,
+                    service=incident.service,
+                    severity=incident.severity.value
+                    if hasattr(incident.severity, "value")
+                    else str(incident.severity),
+                )
 
-            print(
-                f"Graph invoked for {incident.id}"
-            )
+                state = graph.invoke(
+                    {
+                        "incident_id": incident.id,
+                    },
+                    config=config,
+                )
+
+                print(state)
+
+                print(
+                    f"Graph invoked for {incident.id}"
+                )
 
             sqs.delete_message(
                 QueueUrl=settings.sqs_queue_url,
@@ -86,7 +105,7 @@ def main():
 
         if "incident" in locals():
 
-            workflow.incident_repository.update_status(
+            incident_repository.update_status(
                 incident.id,
                 "failed",
             )

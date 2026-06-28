@@ -6,11 +6,13 @@ from workflows.state import (
     IncidentWorkflowState,
 )
 
+from shared.telemetry import trace_span
 
 def create_retrieve_knowledge_node(
     retriever: KnowledgeRetriever,
 ):
 
+    @trace_span("Knowledge Retrieval")
     def retrieve_knowledge_node(
         state: IncidentWorkflowState,
     ) -> IncidentWorkflowState:

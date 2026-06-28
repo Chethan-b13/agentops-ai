@@ -3,10 +3,12 @@ from agents.rca.rca_service import RCAService
 from workflows.state import (
     IncidentWorkflowState,
 )
+from shared.telemetry import trace_span
 
 
 def create_rca_node(rca_service: RCAService):
 
+    @trace_span("Root Cause Analysis")
     def rca_node(
         state: IncidentWorkflowState,
     ) -> IncidentWorkflowState:

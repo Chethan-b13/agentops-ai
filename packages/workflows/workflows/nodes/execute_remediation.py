@@ -5,12 +5,14 @@ from shared.services.execution_service import (
 from workflows.state import (
     IncidentWorkflowState,
 )
+from shared.telemetry import trace_span
 
 
 def create_execute_remediation_node(
     execution_service: ExecutionService,
 ):
 
+    @trace_span("Execute Remediation")
     def execute_remediation_node(
         state: IncidentWorkflowState,
     ):

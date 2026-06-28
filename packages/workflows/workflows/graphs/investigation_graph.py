@@ -11,7 +11,6 @@ from workflows.nodes import (
     create_rca_node,
     create_collect_evidence_node,
     create_triage_node,
-    human_review_node,
     create_remediation_node,
     create_validation_node,
     await_human_approval_node,
@@ -58,11 +57,6 @@ def create_investigation_graph(
         create_rca_node(
             workflow_context.rca_service,
         ),
-    )
-
-    builder.add_node(
-        "human_review",
-        human_review_node,
     )
 
     builder.add_node(
@@ -120,7 +114,7 @@ def create_investigation_graph(
         route_after_rca,
         {
             "continue": "remediation",
-            "human_review": "human_review",
+            "human_review": END,
         },
     )
 
@@ -141,11 +135,6 @@ def create_investigation_graph(
 
     builder.add_edge(
         "execute_remediation",
-        END,
-    )
-
-    builder.add_edge(
-        "human_review",
         END,
     )
 

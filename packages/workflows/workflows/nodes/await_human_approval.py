@@ -3,8 +3,9 @@ from langgraph.types import interrupt
 from workflows.state import (
     IncidentWorkflowState,
 )
+from shared.telemetry import trace_span
 
-
+@trace_span("Human Approval")
 def await_human_approval_node(
     state: IncidentWorkflowState,
 ) -> IncidentWorkflowState:

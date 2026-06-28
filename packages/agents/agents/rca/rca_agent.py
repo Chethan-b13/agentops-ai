@@ -1,10 +1,9 @@
-from langchain_ollama import ChatOllama
 from langchain_core.messages import (
     HumanMessage,
     SystemMessage,
 )
 
-from shared.settings import settings
+from shared.llm import LLMClient
 
 from .prompts import (
     SYSTEM_PROMPT,
@@ -18,15 +17,8 @@ class RCAAgent:
 
     def __init__(self):
 
-        self.llm = (
-            ChatOllama(
-                model=settings.ollama_model,
-                base_url=settings.ollama_base_url,
-                temperature=0,
-            )
-            .with_structured_output(
-                RCAResultSchema
-            )
+        self.llm = LLMClient(
+            output_schema=RCAResultSchema,
         )
 
     def analyze(

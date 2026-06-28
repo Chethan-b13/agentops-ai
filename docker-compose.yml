@@ -73,5 +73,15 @@ services:
       timeout: 5s
       retries: 20
 
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+
+    ports:
+      - "16686:16686"
+      - "4318:4318"
+
+    environment:
+      COLLECTOR_OTLP_ENABLED: "true"
+
 volumes:
   postgres_data:

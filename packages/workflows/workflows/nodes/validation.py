@@ -5,12 +5,13 @@ from agents.validation.validation_service import (
 from workflows.state import (
     IncidentWorkflowState,
 )
-
+from shared.telemetry import trace_span
 
 def create_validation_node(
     validation_service: ValidationService,
 ):
 
+    @trace_span("Validate Remediation")
     def validation_node(
         state: IncidentWorkflowState,
     ) -> IncidentWorkflowState:

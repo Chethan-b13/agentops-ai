@@ -5,12 +5,13 @@ from agents.remediation.remediation_service import (
 from workflows.state import (
     IncidentWorkflowState,
 )
-
+from shared.telemetry import trace_span
 
 def create_remediation_node(
     remediation_service: RemediationService,
 ):
 
+    @trace_span("Generate Remediation")
     def remediation_node(
         state: IncidentWorkflowState,
     ) -> IncidentWorkflowState:
