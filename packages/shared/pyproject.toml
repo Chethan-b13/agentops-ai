@@ -6,4 +6,9 @@ dependencies = [
     "pydantic-settings",
     "sqlalchemy",
     "psycopg[binary]",
+    "pygithub>=2.9.1",
+    "agents",
 ]
+
+[tool.uv.sources]
+agents = { workspace = true }

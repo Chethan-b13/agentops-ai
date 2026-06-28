@@ -14,7 +14,8 @@ from workflows.nodes import (
     human_review_node,
     create_remediation_node,
     create_validation_node,
-    await_human_approval_node
+    await_human_approval_node,
+    create_execute_remediation_node
 )
 from workflows.routers import (
     route_after_triage,
@@ -83,6 +84,13 @@ def create_investigation_graph(
         await_human_approval_node,
     )
 
+    builder.add_node(
+        "execute_remediation",
+        create_execute_remediation_node(
+            workflow_context.execution_service,
+        ),
+    )
+
     builder.add_edge(
         START,
         "collect_evidence",
@@ -128,9 +136,14 @@ def create_investigation_graph(
 
     builder.add_edge(
         "await_human_approval",
+        "execute_remediation",
+    )
+
+    builder.add_edge(
+        "execute_remediation",
         END,
     )
-    
+
     builder.add_edge(
         "human_review",
         END,

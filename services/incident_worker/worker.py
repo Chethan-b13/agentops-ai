@@ -31,6 +31,10 @@ from shared.repositories.validation_repository import ValidationRepository
 from agents.validation.validation_agent import ValidationAgent
 from agents.validation.validation_service import ValidationService
 
+from shared.clients.github_client import GitHubClient
+from shared.executors.github_executor import GitHubExecutor
+from shared.services.execution_service import ExecutionService
+
 
 def main():
     sqs = boto3.client(
@@ -116,13 +120,27 @@ def main():
         validation_agent=validation_agent,
     )
 
+    github_client = GitHubClient(
+        token=settings.github_token,
+        repository=settings.github_repository,
+    )
+
+    github_executor = GitHubExecutor(
+        github_client,
+    )
+
+    execution_service = ExecutionService(
+        github_executor,
+    )
+
     workflow_context = WorkflowContext(
         context_collector=context_collector,
         triage_service=triage_service,
         knowledge_retriever=knowledge_retriever,
         rca_service=rca_service,
         remediation_service=remediation_service,
-        validation_service=validation_service
+        validation_service=validation_service,
+        execution_service=execution_service
     )
 
     memory = MemorySaver()

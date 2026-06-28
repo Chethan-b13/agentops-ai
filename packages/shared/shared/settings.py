@@ -24,4 +24,7 @@ class Settings(BaseSettings):
     ollama_model: str = "qwen3:8b"
     ollama_base_url: str = "http://localhost:11434"
 
+    github_token: str
+    github_repository: str
+
 settings = Settings()

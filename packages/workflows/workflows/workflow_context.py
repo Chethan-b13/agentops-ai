@@ -1,13 +1,14 @@
 from dataclasses import dataclass
 
 from shared.services.context_collector import ContextCollector
+from shared.services.knowledge_retriever import KnowledgeRetriever
+from shared.services.execution_service import ExecutionService
 
 from agents.triage.triage_service import TriageService
 from agents.rca.rca_service import RCAService
 from agents.remediation.remediation_service import RemediationService
 from agents.validation.validation_service import ValidationService
 
-from shared.services.knowledge_retriever import KnowledgeRetriever
 
 
 @dataclass(slots=True)
@@ -18,3 +19,4 @@ class WorkflowContext:
     rca_service: RCAService
     remediation_service: RemediationService
     validation_service: ValidationService
+    execution_service: ExecutionService
