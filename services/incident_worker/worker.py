@@ -1,42 +1,18 @@
 import json
-import boto3
 
-from langgraph.checkpoint.memory import MemorySaver
+import boto3
 
 from mappers.incident_mapper import map_event_to_incident
 
-from shared.services.context_collector import ContextCollector
 from shared.database.session import SessionLocal
-from shared.repositories.incident_repository import IncidentRepository
 from shared.settings import settings
-from shared.repositories.incident_evidence_repository import IncidentEvidenceRepository
-from shared.repositories.triage_repository import TriageRepository
-from shared.repositories.rca_repository import RCARepository
-from shared.services.knowledge_retriever import KnowledgeRetriever
 
-from agents.triage.triage_agent import TriageAgent
-from agents.triage.triage_service import TriageService
-
-from agents.rca.rca_agent import RCAAgent
-from agents.rca.rca_service import RCAService
-
-from workflows.graphs.investigation_graph import create_investigation_graph
-from workflows.workflow_context import WorkflowContext
-
-from shared.repositories.remediation_repository import RemediationRepository
-from agents.remediation.remediation_agent import RemediationAgent
-from agents.remediation.remediation_service import RemediationService
-
-from shared.repositories.validation_repository import ValidationRepository
-from agents.validation.validation_agent import ValidationAgent
-from agents.validation.validation_service import ValidationService
-
-from shared.clients.github_client import GitHubClient
-from shared.executors.github_executor import GitHubExecutor
-from shared.services.execution_service import ExecutionService
+from workflows.factory import create_workflow
+from shared.repositories.incident_repository import IncidentRepository
 
 
 def main():
+
     sqs = boto3.client(
         "sqs",
         endpoint_url=settings.aws_endpoint_url,
@@ -62,129 +38,55 @@ def main():
     body = json.loads(message["Body"])
 
     db = SessionLocal()
-
-    repository = IncidentRepository(db)
-
-    evidence_repository = IncidentEvidenceRepository(db)
-
-    context_collector = ContextCollector(
-        repository,
-        evidence_repository,
-    )
-
-    triage_repository = TriageRepository(db)
-    triage_agent = TriageAgent()
-    triage_service = TriageService(
-        incident_repo=repository,
-        evidence_repo=evidence_repository,
-        triage_repo=triage_repository,
-        triage_agent=triage_agent
-    )
-
-    knowledge_retriever = KnowledgeRetriever()
-    rca_repository = RCARepository(db)
-    rca_agent = RCAAgent()
-    rca_service = RCAService(
-        incident_repo=repository,
-        evidence_repo=evidence_repository,
-        rca_repo=rca_repository,
-        rca_agent=rca_agent,
-    )
-
-
-    remediation_repository = (
-        RemediationRepository(db)
-    )
-
-    remediation_agent = (
-        RemediationAgent()
-    )
-
-    remediation_service = (
-        RemediationService(
-            incident_repo=repository,
-            evidence_repo=evidence_repository,
-            remediation_repo=remediation_repository,
-            remediation_agent=remediation_agent,
-        )
-    )
-
-    validation_repository = ValidationRepository(db)
-
-    validation_agent = ValidationAgent()
-
-    validation_service = ValidationService(
-        incident_repo=repository,
-        evidence_repo=evidence_repository,
-        validation_repo=validation_repository,
-        validation_agent=validation_agent,
-    )
-
-    github_client = GitHubClient(
-        token=settings.github_token,
-        repository=settings.github_repository,
-    )
-
-    github_executor = GitHubExecutor(
-        github_client,
-    )
-
-    execution_service = ExecutionService(
-        github_executor,
-    )
-
-    workflow_context = WorkflowContext(
-        context_collector=context_collector,
-        triage_service=triage_service,
-        knowledge_retriever=knowledge_retriever,
-        rca_service=rca_service,
-        remediation_service=remediation_service,
-        validation_service=validation_service,
-        execution_service=execution_service
-    )
-
-    memory = MemorySaver()
-
-    graph = create_investigation_graph(
-        workflow_context,
-        checkpointer=memory,
-    )
-
+    incident_repository = IncidentRepository(db)
 
     try:
-        incident = map_event_to_incident(body)
 
-        incident = repository.create(incident)
+        with create_workflow(db) as graph:
 
-        print(f"Created incident: {incident.id}")
+            incident = map_event_to_incident(body)
 
-        config = {
-            "configurable": {
-                "thread_id": incident.id
+            incident = incident_repository.create(
+                incident
+            )
+
+            print(
+                f"Created incident: {incident.id}"
+            )
+
+            config = {
+                "configurable": {
+                    "thread_id": incident.id,
+                }
             }
-        }
-        state = graph.invoke(
-            {
-                "incident_id": incident.id,
-            },
-            config=config,
-        )
 
-        print(state)
+            state = graph.invoke(
+                {
+                    "incident_id": incident.id,
+                },
+                config=config,
+            )
 
-        print(
-            f"Graph invoked for {incident.id}"
-        )
+            print(state)
 
-        sqs.delete_message(
-            QueueUrl=settings.sqs_queue_url,
-            ReceiptHandle=message["ReceiptHandle"],
-        )
+            print(
+                f"Graph invoked for {incident.id}"
+            )
 
-        print("Message deleted")
+            sqs.delete_message(
+                QueueUrl=settings.sqs_queue_url,
+                ReceiptHandle=message[
+                    "ReceiptHandle"
+                ],
+            )
+
+            print("Message deleted")
+
     except Exception as e:
+
         if "incident" in locals():
-            repository.update_status(
+
+            workflow.incident_repository.update_status(
                 incident.id,
                 "failed",
             )
@@ -194,6 +96,7 @@ def main():
         )
 
         raise
+
     finally:
         db.close()
 
