@@ -18,7 +18,7 @@ from agents.triage.triage_service import TriageService
 from agents.rca.rca_agent import RCAAgent
 from agents.rca.rca_service import RCAService
 
-from workflows.incident_graph import create_incident_graph
+from workflows.graphs.investigation_graph import create_investigation_graph
 from workflows.workflow_context import WorkflowContext
 
 
@@ -84,7 +84,7 @@ def main():
         rca_service=rca_service
     )
 
-    graph = create_incident_graph(
+    graph = create_investigation_graph(
         workflow_context
     )
 

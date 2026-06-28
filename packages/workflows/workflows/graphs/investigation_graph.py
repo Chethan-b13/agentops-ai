@@ -19,7 +19,7 @@ from workflows.routers import (
 )
 
 
-def create_incident_graph(
+def create_investigation_graph(
     workflow_context: WorkflowContext
 ):
 
@@ -99,7 +99,7 @@ def create_incident_graph(
     )
 
     graph = builder.compile(
-        name="incident_workflow"
+        name="investigation_workflow"
     )
 
     return graph
