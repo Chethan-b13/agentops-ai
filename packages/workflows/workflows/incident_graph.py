@@ -5,12 +5,18 @@ from langgraph.graph import (
 )
 
 from workflows.state import IncidentWorkflowState
-from workflows.nodes.collect_evidence import create_collect_evidence_node
-from workflows.nodes.triage import create_triage_node
 from workflows.workflow_context import WorkflowContext
-from workflows.routers.triage import route_after_triage
-from workflows.nodes.retrieve_knowledge import create_retrieve_knowledge_node
-from workflows.nodes.rca import create_rca_node
+from workflows.nodes import (
+    create_retrieve_knowledge_node,
+    create_rca_node,
+    create_collect_evidence_node,
+    create_triage_node,
+    human_review_node
+)
+from workflows.routers import (
+    route_after_triage,
+    route_after_rca
+)
 
 
 def create_incident_graph(
@@ -49,6 +55,11 @@ def create_incident_graph(
         ),
     )
 
+    builder.add_node(
+        "human_review",
+        human_review_node,
+    )
+
     builder.add_edge(
         START,
         "collect_evidence",
@@ -73,8 +84,17 @@ def create_incident_graph(
         "rca",
     )
 
-    builder.add_edge(
+    builder.add_conditional_edges(
         "rca",
+        route_after_rca,
+        {
+            "continue": END,
+            "human_review": "human_review",
+        },
+    )
+
+    builder.add_edge(
+        "human_review",
         END,
     )
 
