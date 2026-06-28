@@ -5,3 +5,4 @@ from .retrieve_knowledge import create_retrieve_knowledge_node
 from .collect_evidence import create_collect_evidence_node
 from .remediation import create_remediation_node
 from .validation import create_validation_node
+from .await_human_approval import await_human_approval_node

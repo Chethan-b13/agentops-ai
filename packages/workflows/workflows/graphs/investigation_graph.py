@@ -13,7 +13,8 @@ from workflows.nodes import (
     create_triage_node,
     human_review_node,
     create_remediation_node,
-    create_validation_node
+    create_validation_node,
+    await_human_approval_node
 )
 from workflows.routers import (
     route_after_triage,
@@ -75,7 +76,12 @@ def create_investigation_graph(
         create_validation_node(
             workflow_context.validation_service,
         ),
-)
+    )
+
+    builder.add_node(
+        "await_human_approval",
+        await_human_approval_node,
+    )
 
     builder.add_edge(
         START,
@@ -117,8 +123,14 @@ def create_investigation_graph(
 
     builder.add_edge(
         "validation",
+        "await_human_approval",
+    )
+
+    builder.add_edge(
+        "await_human_approval",
         END,
-)
+    )
+    
     builder.add_edge(
         "human_review",
         END,

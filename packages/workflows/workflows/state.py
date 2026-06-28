@@ -22,3 +22,5 @@ class IncidentWorkflowState(TypedDict):
     remediation_plan: NotRequired[RemediationPlanSchema]
 
     validation_result: NotRequired[ValidationResultSchema]
+
+    approval: str | None = None
