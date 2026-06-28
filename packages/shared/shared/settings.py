@@ -21,5 +21,7 @@ class Settings(BaseSettings):
     aws_endpoint_url: str = "http://localhost:4566"
     aws_region: str = "us-west-1"
 
+    ollama_model: str = "qwen3:8b"
+    ollama_base_url: str = "http://localhost:11434"
 
 settings = Settings()

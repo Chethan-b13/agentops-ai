@@ -10,6 +10,7 @@ from workflows.nodes.triage import create_triage_node
 from workflows.workflow_context import WorkflowContext
 from workflows.routers.triage import route_after_triage
 from workflows.nodes.retrieve_knowledge import create_retrieve_knowledge_node
+from workflows.nodes.rca import create_rca_node
 
 
 def create_incident_graph(
@@ -41,6 +42,13 @@ def create_incident_graph(
         ),
     )
 
+    builder.add_node(
+        "rca",
+        create_rca_node(
+            workflow_context.rca_service,
+        ),
+    )
+
     builder.add_edge(
         START,
         "collect_evidence",
@@ -58,6 +66,16 @@ def create_incident_graph(
             "continue": "retrieve_knowledge",
             "human_review": END,
         },
+    )
+
+    builder.add_edge(
+        "retrieve_knowledge",
+        "rca",
+    )
+
+    builder.add_edge(
+        "rca",
+        END,
     )
 
     graph = builder.compile(

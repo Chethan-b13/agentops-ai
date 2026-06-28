@@ -9,10 +9,14 @@ from shared.repositories.incident_repository import IncidentRepository
 from shared.settings import settings
 from shared.repositories.incident_evidence_repository import IncidentEvidenceRepository
 from shared.repositories.triage_repository import TriageRepository
+from shared.repositories.rca_repository import RCARepository
 from shared.services.knowledge_retriever import KnowledgeRetriever
 
 from agents.triage.triage_agent import TriageAgent
 from agents.triage.triage_service import TriageService
+
+from agents.rca.rca_agent import RCAAgent
+from agents.rca.rca_service import RCAService
 
 from workflows.incident_graph import create_incident_graph
 from workflows.workflow_context import WorkflowContext
@@ -56,7 +60,6 @@ def main():
 
     triage_repository = TriageRepository(db)
     triage_agent = TriageAgent()
-
     triage_service = TriageService(
         incident_repo=repository,
         evidence_repo=evidence_repository,
@@ -65,11 +68,20 @@ def main():
     )
 
     knowledge_retriever = KnowledgeRetriever()
+    rca_repository = RCARepository(db)
+    rca_agent = RCAAgent()
+    rca_service = RCAService(
+        incident_repo=repository,
+        evidence_repo=evidence_repository,
+        rca_repo=rca_repository,
+        rca_agent=rca_agent,
+    )
 
     workflow_context = WorkflowContext(
         context_collector=context_collector,
         triage_service=triage_service,
-        knowledge_retriever=knowledge_retriever
+        knowledge_retriever=knowledge_retriever,
+        rca_service=rca_service
     )
 
     graph = create_incident_graph(

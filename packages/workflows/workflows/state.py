@@ -1,8 +1,10 @@
 from typing import TypedDict, NotRequired
 
 from agents.triage.triage_schema import TriageResultSchema
+from agents.rca.rca_schema import RCAResultSchema
 
 from shared.schemas.knowledge import KnowledgeDocument
+
 
 
 class IncidentWorkflowState(TypedDict):
@@ -13,3 +15,5 @@ class IncidentWorkflowState(TypedDict):
     knowledge_documents: NotRequired[
         list[KnowledgeDocument]
     ]
+
+    rca_result: NotRequired[RCAResultSchema]
