@@ -2,17 +2,21 @@ from pathlib import Path
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-
 ROOT = Path(__file__).resolve().parents[3]
+
 
 class Settings(BaseSettings):
     postgres_url: str
     redis_url: str
 
-    model_config = SettingsConfigDict(
-        env_file=ROOT / ".env"
-    )
+    github_token: str
+    github_repository: str
 
+    # Ollama
+    ollama_model: str = "qwen3:8b"
+    ollama_base_url: str = "http://localhost:11434"
+
+    # AWS
     sqs_queue_url: str = (
         "http://sqs.us-west-1.localhost.localstack.cloud:4566/"
         "000000000000/incident-events"
@@ -21,10 +25,14 @@ class Settings(BaseSettings):
     aws_endpoint_url: str = "http://localhost:4566"
     aws_region: str = "us-west-1"
 
-    ollama_model: str = "qwen3:8b"
-    ollama_base_url: str = "http://localhost:11434"
+    # Langfuse
+    langfuse_host: str = "http://localhost:3000"
+    langfuse_public_key: str
+    langfuse_secret_key: str
 
-    github_token: str
-    github_repository: str
+    model_config = SettingsConfigDict(
+        env_file=ROOT / ".env",
+    )
+
 
 settings = Settings()

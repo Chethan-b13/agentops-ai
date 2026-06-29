@@ -4,6 +4,7 @@ from langchain_core.messages import BaseMessage
 from langchain_ollama import ChatOllama
 from pydantic import BaseModel
 
+from shared.observability import get_current_trace
 from shared.settings import settings
 from shared.telemetry import get_tracer
 
@@ -51,4 +52,41 @@ class LLMClient:
                 len(messages),
             )
 
-            return self.llm.invoke(messages)
+            trace = get_current_trace()
+
+            generation = None
+
+            if trace:
+
+                generation = trace.generation(
+                    name="LLM Call",
+                    model=self.model_name,
+                    input=[m.model_dump() for m in messages],
+                    metadata={
+                        "provider": "ollama",
+                        "message_count": len(messages),
+                    },
+                )
+
+            try:
+
+                response = self.llm.invoke(messages)
+
+                if generation:
+
+                    generation.end(
+                        output=response.model_dump(),
+                    )
+
+                return response
+
+            except Exception as ex:
+
+                if generation:
+
+                    generation.end(
+                        level="ERROR",
+                        status_message=str(ex),
+                    )
+
+                raise

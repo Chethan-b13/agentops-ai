@@ -12,6 +12,12 @@ from shared.telemetry import initialize_tracing
 from shared.telemetry import get_tracer
 from shared.telemetry import set_incident_context
 
+from shared.observability import (
+    initialize_langfuse,
+    get_langfuse,
+    set_current_trace,
+)
+
 from workflows.factory import create_workflow
 
 
@@ -20,6 +26,7 @@ def main():
     initialize_tracing(
         service_name="incident-worker",
     )
+    initialize_langfuse()
     tracer = get_tracer(__name__)
 
     sqs = boto3.client(
@@ -70,6 +77,19 @@ def main():
             }
 
             with tracer.start_as_current_span("Incident Workflow") as span:
+                
+                langfuse = get_langfuse()
+
+                trace = langfuse.trace(
+                    name="Incident Workflow",
+                    user_id="agentops-ai",
+                    metadata={
+                        "incident_id": incident.id,
+                        "service": incident.service,
+                    },
+                )
+
+                set_current_trace(trace)
 
                 set_incident_context(
                     incident_id=incident.id,
