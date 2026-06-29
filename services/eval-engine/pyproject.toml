@@ -1,0 +1,11 @@
+[project]
+name = "eval-engine"
+version = "0.1.0"
+
+dependencies = [
+    "pyyaml>=6.0.3",
+    "shared",
+]
+
+[tool.uv.sources]
+shared = { workspace = true }

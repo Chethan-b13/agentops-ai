@@ -12,8 +12,9 @@ dependencies = [
 [tool.uv.workspace]
 members = [
     "apps/api",
-    "services/incident_worker",
     "packages/shared",
     "packages/agents",
     "packages/workflows",
+    "services/incident_worker",
+    "services/eval-engine",
 ]
