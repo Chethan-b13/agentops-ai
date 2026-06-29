@@ -19,4 +19,11 @@ class TriageAgent:
             evidence,
         )
 
-        return self.llm.invoke(messages)
+        return self.llm.invoke(
+            messages,
+            generation_name="Triage Agent",
+            metadata={
+                "agent": "triage",
+                "prompt_version": "v1",
+            },
+        )

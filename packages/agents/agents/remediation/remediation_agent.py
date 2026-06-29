@@ -40,5 +40,10 @@ class RemediationAgent:
             [
                 SystemMessage(content=SYSTEM_PROMPT),
                 HumanMessage(content=prompt),
-            ]
+            ],
+            generation_name="Remediation Agent",
+            metadata={
+                "agent": "remediation",
+                "prompt_version": "v1",
+            },
         )

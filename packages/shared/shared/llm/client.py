@@ -31,6 +31,9 @@ class LLMClient:
     def invoke(
         self,
         messages: list[BaseMessage],
+        *,
+        generation_name: str,
+        metadata: dict | None = None,
     ):
 
         tracer = get_tracer(__name__)
@@ -59,12 +62,13 @@ class LLMClient:
             if trace:
 
                 generation = trace.generation(
-                    name="LLM Call",
+                    name=generation_name,
                     model=self.model_name,
                     input=[m.model_dump() for m in messages],
                     metadata={
                         "provider": "ollama",
-                        "message_count": len(messages),
+                        "temperature": 0,
+                        **(metadata or {}),
                     },
                 )
 

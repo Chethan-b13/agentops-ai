@@ -48,5 +48,10 @@ class ValidationAgent:
                 HumanMessage(
                     content=prompt
                 ),
-            ]
+            ],
+            generation_name="Validation Agent",
+            metadata={
+                "agent": "validation",
+                "prompt_version": "v1",
+            },
         )

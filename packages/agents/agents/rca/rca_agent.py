@@ -44,5 +44,10 @@ class RCAAgent:
                 HumanMessage(
                     content=prompt,
                 ),
-            ]
+            ],
+            generation_name="RCA Agent",
+            metadata={
+                "agent": "rca",
+                "prompt_version": "v1",
+            },
         )
