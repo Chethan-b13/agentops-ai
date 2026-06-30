@@ -7,16 +7,16 @@
     {
       "id": "DB-001",
       "name": "Database Connection Pool Exhaustion",
-      "score": 1.0,
+      "score": 0.95,
       "passed": true,
-      "latency_ms": 0.0063749030232429504
+      "latency_ms": 317282.8947920352
     },
     {
       "id": "DB-002",
       "name": "Slow SQL Query",
-      "score": 1.0,
+      "score": 0.95,
       "passed": true,
-      "latency_ms": 0.24429196491837502
+      "latency_ms": 271808.9968750719
     }
   ]
 }

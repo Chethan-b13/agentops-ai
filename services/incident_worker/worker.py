@@ -2,7 +2,7 @@ import json
 
 import boto3
 
-from mappers.incident_mapper import map_event_to_incident
+from shared.services.incident_mapper import map_event_to_incident
 
 from shared.database.session import SessionLocal
 from shared.settings import settings

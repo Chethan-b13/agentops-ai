@@ -11,9 +11,9 @@ from shared.constants.evidence_types import (
     DEPLOYMENTS
 )
 
-from collectors.logs_collector import LogsCollector
-from collectors.metrics_collector import MetricsCollector
-from collectors.deployments_collector import (
+from shared.services.collectors import ( 
+    LogsCollector,
+    MetricsCollector,
     DeploymentsCollector,
 )
 

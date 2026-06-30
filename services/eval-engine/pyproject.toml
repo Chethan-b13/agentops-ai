@@ -5,7 +5,9 @@ version = "0.1.0"
 dependencies = [
     "pyyaml>=6.0.3",
     "shared",
+    "workflows",
 ]
 
 [tool.uv.sources]
 shared = { workspace = true }
+workflows = { workspace = true }

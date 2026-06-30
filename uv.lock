@@ -387,12 +387,14 @@ source = { virtual = "services/eval-engine" }
 dependencies = [
     { name = "pyyaml" },
     { name = "shared" },
+    { name = "workflows" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "pyyaml", specifier = ">=6.0.3" },
     { name = "shared", editable = "packages/shared" },
+    { name = "workflows", editable = "packages/workflows" },
 ]
 
 [[package]]

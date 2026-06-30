@@ -1,6 +1,6 @@
 # 🚀 AgentOps AI Benchmark Report
 
-Generated: 2026-06-30 21:18:29
+Generated: 2026-06-30 22:08:16
 
 ## Summary
 
@@ -17,5 +17,5 @@ Generated: 2026-06-30 21:18:29
 
 | Benchmark | Score | Latency | Status |
 |-----------|-------|---------|--------|
-| DB-001 | 1.00 | 0 ms | ✅ PASS |
-| DB-002 | 1.00 | 0 ms | ✅ PASS |
+| DB-001 | 0.95 | 317283 ms | ✅ PASS |
+| DB-002 | 0.95 | 271809 ms | ✅ PASS |
