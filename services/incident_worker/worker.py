@@ -7,6 +7,7 @@ from mappers.incident_mapper import map_event_to_incident
 from shared.database.session import SessionLocal
 from shared.settings import settings
 from shared.repositories.incident_repository import IncidentRepository
+from shared.services import IncidentProcessingService
 
 from shared.telemetry import initialize_tracing
 from shared.telemetry import get_tracer
@@ -55,6 +56,7 @@ def main():
 
     db = SessionLocal()
     incident_repository = IncidentRepository(db)
+    service = IncidentProcessingService(db)
 
     try:
 
@@ -62,12 +64,8 @@ def main():
 
             incident = map_event_to_incident(body)
 
-            incident = incident_repository.create(
+            incident = service.process(
                 incident
-            )
-
-            print(
-                f"Created incident: {incident.id}"
             )
 
             config = {

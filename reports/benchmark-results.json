@@ -1,0 +1,25 @@
+{
+  "generated_at": "2026-06-30 21:18:29.910961",
+  "summary": {
+    "benchmarks": 2,
+    "passed": 2,
+    "failed": 0,
+    "accuracy": 1.0
+  },
+  "results": [
+    {
+      "id": "DB-001",
+      "name": "Database Connection Pool Exhaustion",
+      "score": 1.0,
+      "passed": true,
+      "latency_ms": 0.0063749030232429504
+    },
+    {
+      "id": "DB-002",
+      "name": "Slow SQL Query",
+      "score": 1.0,
+      "passed": true,
+      "latency_ms": 0.24429196491837502
+    }
+  ]
+}

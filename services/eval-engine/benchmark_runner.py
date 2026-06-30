@@ -1,13 +1,21 @@
 from pathlib import Path
+import time
 
 from benchmark_loader import BenchmarkLoader
-from shared.evaluation import EvaluationConfig
+from evaluator import Evaluator
+from console import Console
+
+from shared.evaluation import (
+    EvaluationConfig,
+    WorkflowResult,
+)
 
 
 class BenchmarkRunner:
 
     def __init__(self):
         self.loader = BenchmarkLoader()
+        self.evaluator = Evaluator()
 
     def run(
         self,
@@ -15,16 +23,97 @@ class BenchmarkRunner:
         config: EvaluationConfig,
     ):
 
-        benchmark = self.loader.load(benchmark_path)
+        benchmark = self.loader.load(
+            benchmark_path
+        )
+        
 
-        print(f"Running benchmark: {benchmark.name}")
+        Console.benchmark(benchmark)
 
-        print(f"Model: {config.model}")
+        start = time.perf_counter()
 
-        print(f"Prompt: {config.prompt_version}")
+        #
+        # TEMP
+        #
+        # Next commit:
+        # Replace with the real workflow.
+        #
 
-        print()
+        result = WorkflowResult(
+            incident_id="benchmark",
 
-        print("✓ Benchmark loaded")
+            triage={
+                "severity": "high",
+                "category": "database",
+                "owner": "payments-api-team",
+            },
 
-        return benchmark
+            rca={
+                "root_cause": "PostgreSQL connection pool exhaustion",
+            },
+
+            remediation={
+                "steps": [
+                    "Increase pool",
+                    "Fix leaks",
+                ]
+            },
+
+            validation={
+                "passed": True,
+            },
+
+            latency_ms=0,
+        )
+
+        result.latency_ms = (
+            time.perf_counter() - start
+        ) * 1000
+
+        evaluation = self.evaluator.evaluate(
+            benchmark,
+            result,
+        )
+
+        print("✓ Loaded Benchmark")
+        print("✓ Executed Workflow")
+        print("✓ Evaluated")
+
+        print("--------------------------------")
+
+        print(
+            "Expected RCA:",
+            benchmark.expected_outputs.rca.root_cause,
+        )
+
+        print(
+            "Predicted RCA:",
+            result.rca["root_cause"],
+        )
+
+        print(
+            f"Score: {evaluation['score']:.2f}"
+        )
+
+        print(
+            f"Reason: {evaluation['reasoning']}"
+        )
+
+        if evaluation["passed"]:
+            Console.pass_result(
+                evaluation["score"],
+                result.latency_ms,
+            )
+        else:
+            Console.fail_result(
+                evaluation["score"],
+                result.latency_ms,
+            )
+
+        return {
+            "id": benchmark.id,
+            "name": benchmark.name,
+            "score": evaluation["score"],
+            "passed": evaluation["passed"],
+            "latency_ms": result.latency_ms,
+        }

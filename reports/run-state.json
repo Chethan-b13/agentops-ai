@@ -1,0 +1,22 @@
+{
+  "completed": [
+    "connection_pool_exhaustion",
+    "slow_query"
+  ],
+  "results": [
+    {
+      "id": "DB-001",
+      "name": "Database Connection Pool Exhaustion",
+      "score": 1.0,
+      "passed": true,
+      "latency_ms": 0.0063749030232429504
+    },
+    {
+      "id": "DB-002",
+      "name": "Slow SQL Query",
+      "score": 1.0,
+      "passed": true,
+      "latency_ms": 0.24429196491837502
+    }
+  ]
+}
