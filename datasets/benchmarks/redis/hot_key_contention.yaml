@@ -1,0 +1,61 @@
+id: RD-004
+
+name: Redis Hot Key Contention
+
+description: |
+  A single hot key receives an extremely high volume of read/write traffic,
+  saturating the single Redis CPU thread and leading to command queuing and high latency.
+
+tags:
+  - redis
+  - performance
+  - hot-key
+  - throughput
+
+difficulty: hard
+
+source: synthetic
+version: 1
+
+metadata:
+  author: chethan
+  created_at: "2026-06-30"
+  notes: "High traffic to inventory key saturating single Redis CPU core"
+
+incident:
+  service: inventory-api
+  severity: high
+  region: us-east-1
+  metric_name: CommandsPerSecond
+  threshold: 1
+  current_value: 85000
+
+evidence:
+  logs:
+    - "Slow log: GET inventory:item:iphone15 duration = 54ms"
+    - "Redis CPU utilization on core 0 at 99.5%"
+    - "Command queue capacity threshold exceeded"
+
+  metrics:
+    cpu: 98
+    memory: 35
+    commands_per_second: 85000
+    request_latency_ms: 120
+
+expected_outputs:
+
+  triage:
+    severity: high
+    category: redis
+    owner: inventory-api-team
+
+  rca:
+    root_cause: Extreme hot key contention on inventory:item:iphone15 saturating the Redis single-threaded execution core.
+
+  remediation:
+    - Enable read replica scaling in Redis and distribute read requests
+    - Implement local cache (in-memory) inside inventory-api servers for hot items
+    - Split hot key into multiple keys (e.g. inventory:item:iphone15:shard_1..N) to distribute hash slots
+
+  validation:
+    passed: true

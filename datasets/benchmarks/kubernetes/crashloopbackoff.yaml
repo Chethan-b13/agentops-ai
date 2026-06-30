@@ -1,0 +1,61 @@
+id: K8S-001
+
+name: Pod CrashLoopBackOff
+
+description: |
+  The application pods are failing repeatedly upon startup, putting the
+  deployment in a CrashLoopBackOff status due to a missing configuration secret.
+
+tags:
+  - kubernetes
+  - pod-failure
+  - startup-crash
+  - crashloopbackoff
+
+difficulty: medium
+
+source: synthetic
+version: 1
+
+metadata:
+  author: chethan
+  created_at: "2026-06-30"
+  notes: "Pod crash loop due to missing database credentials config file"
+
+incident:
+  service: user-profile-service
+  severity: high
+  region: us-east-1
+  metric_name: Restarts
+  threshold: 1
+  current_value: 12
+
+evidence:
+  logs:
+    - "Back-off restarting failed container in pod user-profile-service-7cfbd47c7c-abc12"
+    - "panic: open /etc/config/db_creds.json: no such file or directory"
+    - "pod status is CrashLoopBackOff"
+
+  metrics:
+    cpu: 0
+    memory: 0
+    restarts: 12
+    pod_status: "CrashLoopBackOff"
+
+expected_outputs:
+
+  triage:
+    severity: high
+    category: kubernetes
+    owner: user-profile-service-team
+
+  rca:
+    root_cause: Pod CrashLoopBackOff caused by a missing ConfigMap/Secret credentials file at /etc/config/db_creds.json on startup.
+
+  remediation:
+    - Verify and create the missing ConfigMap or Secret containing db_creds.json
+    - Correct the volume mount path in the Kubernetes deployment template
+    - Re-trigger deployment rollout
+
+  validation:
+    passed: true

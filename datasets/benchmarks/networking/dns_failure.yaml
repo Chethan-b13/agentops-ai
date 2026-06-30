@@ -1,0 +1,61 @@
+id: NET-001
+
+name: Networking DNS Failure
+
+description: |
+  The checkout-api is failing to complete transactions because it cannot resolve
+  the domain name for the external Stripe payment gateway.
+
+tags:
+  - networking
+  - dns
+  - core-dns
+  - resolution-failure
+
+difficulty: medium
+
+source: synthetic
+version: 1
+
+metadata:
+  author: chethan
+  created_at: "2026-06-30"
+  notes: "CoreDNS resolution failures blocking checkout payment gateway"
+
+incident:
+  service: checkout-api
+  severity: critical
+  region: us-east-1
+  metric_name: DnsQueryFailures
+  threshold: 1
+  current_value: 85
+
+evidence:
+  logs:
+    - "getaddrinfo ENOTFOUND api.stripe.com"
+    - "Temporary failure in name resolution: checkout-api cannot connect to stripe"
+    - "Could not resolve host: api.stripe.com"
+
+  metrics:
+    cpu: 12
+    memory: 45
+    dns_query_failures: 85
+    request_latency_ms: 5000
+
+expected_outputs:
+
+  triage:
+    severity: critical
+    category: networking
+    owner: core-networking-team
+
+  rca:
+    root_cause: CoreDNS scheduling issues or resolver failure inside the Kubernetes cluster blocking external name resolution.
+
+  remediation:
+    - Verify CoreDNS pods are running, healthy, and scaled adequately in the kube-system namespace
+    - Check the resolv.conf on host nodes and CoreDNS upstream resolvers configuration
+    - Configure local fallback DNS records or temporary endpoint overrides in the application
+
+  validation:
+    passed: true

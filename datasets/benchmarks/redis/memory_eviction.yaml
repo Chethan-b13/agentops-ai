@@ -1,0 +1,63 @@
+id: RD-002
+
+name: Redis Memory Eviction
+
+description: |
+  The Redis instance has reached its maxmemory capacity, triggering active
+  key evictions under the volatile-lru policy, which is causing user sessions
+  to disappear prematurely and driving up login latency.
+
+tags:
+  - redis
+  - memory
+  - eviction
+  - performance
+
+difficulty: medium
+
+source: synthetic
+version: 1
+
+metadata:
+  author: chethan
+  created_at: "2026-06-30"
+  notes: "Redis maxmemory reached triggering session key eviction"
+
+incident:
+  service: session-manager
+  severity: medium
+  region: us-east-1
+  metric_name: EvictionRate
+  threshold: 100
+  current_value: 1500
+
+evidence:
+  logs:
+    - "OOM command not allowed when used memory > 'maxmemory'"
+    - "Evicted key: session:token:auth_8c9d2f"
+    - "Redis memory utilization is at 100%"
+
+  metrics:
+    cpu: 70
+    memory: 100
+    eviction_rate: 1500
+    cache_hit_rate: 45
+    request_latency_ms: 1200
+
+expected_outputs:
+
+  triage:
+    severity: medium
+    category: redis
+    owner: session-team
+
+  rca:
+    root_cause: Redis memory exhaustion causing volatile-lru eviction of active user session tokens.
+
+  remediation:
+    - Increase Redis maxmemory limit in deployment configuration
+    - Adjust key TTL values or switch eviction policy to allkeys-lru
+    - Run background cleanups for expired keys and monitor memory usage
+
+  validation:
+    passed: true

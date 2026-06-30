@@ -1,0 +1,59 @@
+id: DB-005
+
+name: PostgreSQL Replication Lag
+
+description: |
+  Read replicas are significantly behind the primary,
+  causing stale reads and increased latency.
+
+tags:
+  - database
+  - postgres
+  - replication
+
+difficulty: hard
+
+source: synthetic
+version: 1
+
+metadata:
+  author: chethan
+  created_at: "2026-06-30"
+  notes: "PostgreSQL replication lag incident"
+
+incident:
+  service: reporting-api
+  severity: medium
+  region: us-east-1
+  metric_name: ReplicationLagSeconds
+  threshold: 10
+  current_value: 52
+
+evidence:
+  logs:
+    - "replication lag exceeded threshold"
+    - "WAL replay delay detected"
+
+  metrics:
+    cpu: 28
+    memory: 41
+    replication_lag_seconds: 52
+    request_latency_ms: 1700
+
+expected_outputs:
+
+  triage:
+    severity: medium
+    category: database
+    owner: platform-database-team
+
+  rca:
+    root_cause: PostgreSQL replication lag caused by WAL replay backlog
+
+  remediation:
+    - Investigate replica health
+    - Increase replication throughput
+    - Reduce WAL generation rate
+
+  validation:
+    passed: true

@@ -1,0 +1,61 @@
+id: AWS-001
+
+name: AWS Lambda Function Timeout
+
+description: |
+  An AWS Lambda function processing incoming PDF invoices is failing repeatedly,
+  exceeding its configured maximum timeout threshold.
+
+tags:
+  - aws
+  - lambda
+  - serverless
+  - timeout
+
+difficulty: medium
+
+source: synthetic
+version: 1
+
+metadata:
+  author: chethan
+  created_at: "2026-06-30"
+  notes: "Lambda execution times out after 15 seconds"
+
+incident:
+  service: invoice-parser
+  severity: high
+  region: us-east-1
+  metric_name: LambdaErrors
+  threshold: 1
+  current_value: 18
+
+evidence:
+  logs:
+    - "2026-06-30T17:30:15.123Z xxxx-xxxx Task timed out after 15.00 seconds"
+    - "REPORT RequestId: xxxx-xxxx Duration: 15020.15 ms Billed Duration: 15000 ms Memory Size: 128 MB Max Memory Used: 124 MB"
+    - "Task timed out during execution of invoice parser"
+
+  metrics:
+    lambda_errors: 18
+    execution_duration_ms: 15000
+    lambda_concurrency: 10
+    request_latency_ms: 15000
+
+expected_outputs:
+
+  triage:
+    severity: high
+    category: aws
+    owner: payments-api-team
+
+  rca:
+    root_cause: AWS Lambda function execution timed out because it exceeded the configured 15-second limit while parsing a large batch payload.
+
+  remediation:
+    - Increase the Lambda execution timeout configuration in Serverless/Terraform settings (e.g. to 60 seconds)
+    - Increase Lambda memory allocation to scale up virtual CPU power proportionally
+    - Optimize processing code or segment files into smaller chunks for parallel processing
+
+  validation:
+    passed: true

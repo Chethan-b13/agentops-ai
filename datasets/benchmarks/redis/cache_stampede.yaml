@@ -1,0 +1,63 @@
+id: RD-001
+
+name: Redis Cache Stampede
+
+description: |
+  A highly requested cache key for the product catalog has expired,
+  causing a sudden spike in database queries as multiple app instances
+  attempt to rebuild the cache simultaneously.
+
+tags:
+  - redis
+  - caching
+  - performance
+  - cache-stampede
+
+difficulty: hard
+
+source: synthetic
+version: 1
+
+metadata:
+  author: chethan
+  created_at: "2026-06-30"
+  notes: "Cache stampede thundering herd on product catalog query"
+
+incident:
+  service: catalog-api
+  severity: high
+  region: us-east-1
+  metric_name: DatabaseConnections
+  threshold: 80
+  current_value: 98
+
+evidence:
+  logs:
+    - "Cache miss for critical key: catalog:products:all"
+    - "Database connection pool spike: active_connections = 98"
+    - "Slow query warning: SELECT * FROM products INNER JOIN inventory ON ..."
+
+  metrics:
+    cpu: 85
+    memory: 60
+    cache_miss_rate: 95
+    db_connections: 98
+    request_latency_ms: 3800
+
+expected_outputs:
+
+  triage:
+    severity: high
+    category: redis
+    owner: catalog-api-team
+
+  rca:
+    root_cause: Cache stampede on product catalog key due to concurrent cache misses under high request load.
+
+  remediation:
+    - Implement single-flight or locking to coordinate database fetches on cache miss
+    - Configure probabilistic early expiration (XFetch) for hot keys
+    - Pre-warm the cache key prior to expiration
+
+  validation:
+    passed: true

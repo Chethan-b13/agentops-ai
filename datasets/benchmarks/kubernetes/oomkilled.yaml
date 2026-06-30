@@ -1,0 +1,59 @@
+id: K8S-003
+
+name: Container OOMKilled
+
+description: |
+  A worker node container has been terminated by the OS kernel OOM killer
+  because the application exceeded its configured memory limits while processing
+  heavy tasks.
+
+tags:
+  - kubernetes
+  - memory
+  - oomkilled
+  - performance
+
+difficulty: medium
+
+source: synthetic
+version: 1
+
+metadata:
+  author: chethan
+  created_at: "2026-06-30"
+  notes: "Pod killed with exit code 137 due to exceeding memory limit"
+
+incident:
+  service: pdf-generator
+  severity: high
+  region: us-east-1
+
+evidence:
+  logs:
+    - "Container pdf-generator-worker was terminated. Reason: OOMKilled, Exit Code: 137"
+    - "Killed process 14 (node) total-vm:4.2GB, anon-rss:512MB, file-rss:0B"
+    - "Memory cgroup out of memory: Killed process"
+
+  metrics:
+    cpu: 45
+    memory: 100
+    memory_limit_bytes: 536870912
+    oom_events: 1
+
+expected_outputs:
+
+  triage:
+    severity: high
+    category: kubernetes
+    owner: document-processing-team
+
+  rca:
+    root_cause: Container OOMKilled (Exit Code 137) because the node process memory footprint exceeded the 512MB limit during PDF rendering.
+
+  remediation:
+    - Increase memory limits and requests in the Helm chart or deployment template
+    - Optimize memory usage in node image/PDF processing logic (e.g. streaming file chunks)
+    - Implement concurrency limits or batch size limits to control maximum memory footprint
+
+  validation:
+    passed: true

@@ -1,0 +1,60 @@
+id: AWS-003
+
+name: AWS EventBridge Target Invocation Failure
+
+description: |
+  A scheduled EventBridge rule fails to trigger its target Lambda function,
+  breaking the nightly stale session cleanup routine.
+
+tags:
+  - aws
+  - eventbridge
+  - lambda
+  - permissions
+  - iam
+
+difficulty: hard
+
+source: synthetic
+version: 1
+
+metadata:
+  author: chethan
+  created_at: "2026-06-30"
+  notes: "EventBridge missing permissions to invoke Lambda function"
+
+incident:
+  service: cleanup-cron
+  severity: medium
+  region: us-east-1
+  metric_name: EventbridgeFailedInvocations
+  threshold: 1
+  current_value: 12
+
+evidence:
+  logs:
+    - "EventBridge Rule rule-nightly-cleanup failed to invoke target arn:aws:lambda:us-east-1:123456789012:function:cleanup-stale-sessions"
+    - "Error: AccessDeniedException: EventBridge is not authorized to perform: lambda:InvokeFunction on resource"
+
+  metrics:
+    eventbridge_failed_invocations: 12
+    eventbridge_matched_events: 12
+    request_latency_ms: 0
+
+expected_outputs:
+
+  triage:
+    severity: medium
+    category: aws
+    owner: security-ops-team
+
+  rca:
+    root_cause: Incorrect resource-based policy on the Lambda function preventing AWS EventBridge from performing the lambda:InvokeFunction operation.
+
+  remediation:
+    - Add permission to the Lambda function policy allowing 'events.amazonaws.com' principal to call 'lambda:InvokeFunction'
+    - Manually invoke the cleanup function to purge stale user sessions
+    - Verify and update the Terraform policy settings to prevent configuration drift
+
+  validation:
+    passed: true

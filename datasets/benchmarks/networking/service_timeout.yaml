@@ -1,0 +1,61 @@
+id: NET-003
+
+name: Downstream Service Timeout
+
+description: |
+  The API Gateway-service is returning 504 Gateway Timeout errors because the downstream
+  user-profile-service is taking longer than the configured timeout threshold to respond.
+
+tags:
+  - networking
+  - timeout
+  - api-gateway
+  - downstream-failure
+
+difficulty: hard
+
+source: synthetic
+version: 1
+
+metadata:
+  author: chethan
+  created_at: "2026-06-30"
+  notes: "Upstream gateway timing out on downstream calls after 2000ms"
+
+incident:
+  service: gateway-service
+  severity: high
+  region: us-east-1
+  metric_name: DownstreamTimeoutCount
+  threshold: 1
+  current_value: 94
+
+evidence:
+  logs:
+    - "Upstream error: Timeout reading response from user-profile-service after 2000ms"
+    - "504 Gateway Timeout on GET /users/me"
+    - "Service timeout exceeded threshold for route 'user-profile'"
+
+  metrics:
+    cpu: 22
+    memory: 38
+    downstream_timeout_count: 94
+    request_latency_ms: 2000
+
+expected_outputs:
+
+  triage:
+    severity: high
+    category: networking
+    owner: gateway-service-team
+
+  rca:
+    root_cause: Excessive processing times in the user-profile-service causing it to violate the 2000ms gateway timeout boundary.
+
+  remediation:
+    - Investigate and optimize database locks/queries in the user-profile-service
+    - Increase gateway timeout values if the long-running queries are expected
+    - Add circuit breaking, retries with backoff, and local fallback cache in gateway-service
+
+  validation:
+    passed: true

@@ -1,0 +1,62 @@
+id: NET-002
+
+name: ALB 5XX Response Spike
+
+description: |
+  The AWS Application Load Balancer (ALB) is experiencing a spike in 5XX error
+  responses because all backend target servers are failing their health checks.
+
+tags:
+  - networking
+  - alb
+  - load-balancer
+  - health-checks
+  - gateway-error
+
+difficulty: medium
+
+source: synthetic
+version: 1
+
+metadata:
+  author: chethan
+  created_at: "2026-06-30"
+  notes: "ALB returning 502/504 due to target health check failures"
+
+incident:
+  service: web-portal
+  severity: high
+  region: us-east-1
+  metric_name: UnhealthyHostCount
+  threshold: 1
+  current_value: 3
+
+evidence:
+  logs:
+    - "HTTP/1.1 502 Bad Gateway (ALB)"
+    - "Target.FailedHealthChecks: Connection refused by target"
+    - "Unhealthy host count in target group tg-web-portal: 3/3"
+
+  metrics:
+    alb_5xx_responses: 420
+    target_response_time_ms: 0
+    unhealthy_hosts: 3
+    request_latency_ms: 0
+
+expected_outputs:
+
+  triage:
+    severity: high
+    category: networking
+    owner: web-portal-team
+
+  rca:
+    root_cause: Web portal application backend instances are refusing HTTP health check connections, making all targets unhealthy at the ALB level.
+
+  remediation:
+    - Restart the web-portal application containers/services to resume listenting on port 8080
+    - Verify ALB target group configuration (port, path, protocol) matches application endpoints
+    - Inspect firewall or security group rules blocking port traffic between ALB and targets
+
+  validation:
+    passed: true

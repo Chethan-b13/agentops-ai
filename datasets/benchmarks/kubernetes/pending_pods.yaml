@@ -1,0 +1,59 @@
+id: K8S-004
+
+name: Pending Pods Resource Exhaustion
+
+description: |
+  Newly scheduled application pods are stuck in the Pending state indefinitely
+  because the Kubernetes scheduler cannot find any nodes with sufficient CPU or memory.
+
+tags:
+  - kubernetes
+  - scheduling
+  - resource-exhaustion
+  - pending-pods
+
+difficulty: hard
+
+source: synthetic
+version: 1
+
+metadata:
+  author: chethan
+  created_at: "2026-06-30"
+  notes: "Pods pending due to insufficient cluster node CPU and memory"
+
+incident:
+  service: analytics-worker
+  severity: medium
+  region: us-east-1
+
+evidence:
+  logs:
+    - "0/5 nodes are available: 3 Insufficient cpu, 2 Insufficient memory"
+    - "pod/analytics-worker-5fdb6898d9-xyz78 status is Pending"
+    - "FailedScheduling: pod trigger reschedule failed"
+
+  metrics:
+    cpu: 0
+    memory: 0
+    cluster_cpu_utilization: 95
+    cluster_memory_utilization: 92
+    pending_pods_count: 8
+
+expected_outputs:
+
+  triage:
+    severity: medium
+    category: kubernetes
+    owner: platform-infra-team
+
+  rca:
+    root_cause: Pods stuck in Pending state because the cluster has insufficient allocatable CPU and memory to satisfy the resource requests.
+
+  remediation:
+    - Enable cluster auto-scaling or manually scale the node group size
+    - Review and optimize cpu/memory request parameters of the analytics-worker pod template
+    - Evict or scale down non-essential daemonsets or staging deployments
+
+  validation:
+    passed: true

@@ -1,0 +1,63 @@
+id: AWS-004
+
+name: AWS CloudWatch Alarm Storm
+
+description: |
+  A database lock issue has escalated, causing a cascading storm of alarms across
+  multiple components, complicating active incident triage.
+
+tags:
+  - aws
+  - cloudwatch
+  - monitoring
+  - alert-fatigue
+  - cascading-failure
+
+difficulty: hard
+
+source: synthetic
+version: 1
+
+metadata:
+  author: chethan
+  created_at: "2026-06-30"
+  notes: "Cascading alarms triggered by database lock issue"
+
+incident:
+  service: payments-platform
+  severity: high
+  region: us-east-1
+  metric_name: ErrorRate
+  threshold: 5
+  current_value: 42
+
+evidence:
+  logs:
+    - "ALARM: 'payment-gateway-latency-high' in us-east-1"
+    - "ALARM: 'payments-api-error-rate-high' in us-east-1"
+    - "ALARM: 'sqs-delay-high-payments-queue' in us-east-1"
+    - "ALARM: 'database-cpu-utilization-100%' in us-east-1"
+
+  metrics:
+    alarm_count: 14
+    request_latency_ms: 12500
+    error_rate: 42
+    cpu: 99
+
+expected_outputs:
+
+  triage:
+    severity: high
+    category: aws
+    owner: core-payments-team
+
+  rca:
+    root_cause: A blocking database lock cascaded upstream, saturating database CPU and triggering downstream error and latency alarms.
+
+  remediation:
+    - Locate and terminate the blocking database lock process
+    - Establish alarm dependencies to suppress downstream notifications during primary infrastructure failures
+    - Temporarily silence payments-api and queue alarms while resolving the database bottleneck
+
+  validation:
+    passed: true

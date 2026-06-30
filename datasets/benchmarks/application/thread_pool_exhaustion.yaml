@@ -1,0 +1,62 @@
+id: APP-002
+
+name: Application Thread Pool Exhaustion
+
+description: |
+  The reporting-service runtime thread pool is completely exhausted because threads
+  are blocked waiting for synchronous responses from a slow external report-generation partner.
+
+tags:
+  - application
+  - thread-pool
+  - blocking-call
+  - java
+
+difficulty: hard
+
+source: synthetic
+version: 1
+
+metadata:
+  author: chethan
+  created_at: "2026-06-30"
+  notes: "Java thread pool exhaustion due to blocking downstream HTTP requests"
+
+incident:
+  service: reporting-service
+  severity: high
+  region: us-east-1
+  metric_name: ActiveThreads
+  threshold: 180
+  current_value: 200
+
+evidence:
+  logs:
+    - "java.util.concurrent.RejectedExecutionException: Task rejected from java.util.concurrent.ThreadPoolExecutor"
+    - "All 200 worker threads in thread pool are active/busy"
+    - "Request queue size exceeded maximum limit (1000)"
+
+  metrics:
+    cpu: 42
+    memory: 78
+    active_threads: 200
+    queued_requests: 1000
+    request_latency_ms: 10000
+
+expected_outputs:
+
+  triage:
+    severity: high
+    category: application
+    owner: reporting-team
+
+  rca:
+    root_cause: Thread pool exhaustion in reporting-service caused by synchronous blocking HTTP calls to a slow external report-generation partner.
+
+  remediation:
+    - Scale up reporting-service replicas to increase total thread capacity temporarily
+    - Configure short socket read timeouts and implement an asynchronous worker pool (e.g. RabbitMQ/Celery)
+    - Implement a circuit breaker to quickly reject requests if the external partner is slow
+
+  validation:
+    passed: true

@@ -13,6 +13,9 @@ class IncidentData(BaseModel):
     service: str
     severity: str
     region: str
+    metric_name: str | None = None
+    threshold: float | None = None
+    current_value: float | None = None
 
 
 class EvidenceData(BaseModel):

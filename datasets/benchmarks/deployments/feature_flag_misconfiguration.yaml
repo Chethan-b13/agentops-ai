@@ -1,0 +1,59 @@
+id: DEP-002
+
+name: Feature Flag Misconfiguration
+
+description: |
+  A feature flag payload was updated with invalid format, causing JSON decoding
+  failures inside the checkout-api and disrupting customer orders.
+
+tags:
+  - deployments
+  - feature-flags
+  - configuration
+  - parsing-error
+
+difficulty: medium
+
+source: synthetic
+version: 1
+
+metadata:
+  author: chethan
+  created_at: "2026-06-30"
+  notes: "LaunchDarkly feature flag containing plain-text instead of JSON"
+
+incident:
+  service: checkout-api
+  severity: high
+  region: us-east-1
+
+evidence:
+  logs:
+    - "JSONDecodeError: Expecting value: line 1 column 1 (char 0)"
+    - "Failed to parse feature flag payload for 'new-checkout-flow': expected JSON dict"
+    - "Fallback to old checkout flow failed: invalid config state"
+
+  metrics:
+    cpu: 14
+    memory: 52
+    feature_flag_evaluations: 1200
+    error_rate: 75
+    request_latency_ms: 10
+
+expected_outputs:
+
+  triage:
+    severity: high
+    category: deployments
+    owner: checkout-api-team
+
+  rca:
+    root_cause: Feature flag 'new-checkout-flow' configuration payload contains malformed plain text rather than valid JSON, crashing JSON deserialization.
+
+  remediation:
+    - Rollback feature flag configuration in LaunchDarkly/Split console to the last working value
+    - Verify and correct JSON format in the feature flag administration portal
+    - Implement try-catch block in application code to safely handle invalid feature flag payload anomalies
+
+  validation:
+    passed: true

@@ -3,41 +3,42 @@ id: DB-002
 name: Slow SQL Query
 
 description: |
-  The application is unable to acquire database connections because
-  the PostgreSQL connection pool has been exhausted.
+  A poorly optimized SQL query is causing high request latency
+  and excessive database CPU utilization.
 
 tags:
   - database
   - postgres
-  - connection-pool
-  - production
+  - slow-query
 
 difficulty: medium
 
 source: synthetic
-
 version: 1
 
 metadata:
   author: chethan
-  created_at: "2026-06-29"
-  notes: Initial benchmark
+  created_at: "2026-06-30"
+  notes: "Slow SQL query due to sequence scan"
 
 incident:
   service: payments-api
   severity: high
   region: us-east-1
+  metric_name: DatabaseConnections
+  threshold: 80
+  current_value: 34
 
 evidence:
   logs:
-    - "FATAL: remaining connection slots are reserved for non-replication superuser connections"
-    - "sqlalchemy.exc.TimeoutError: QueuePool limit reached"
+    - "duration: 8123 ms execute SELECT * FROM orders WHERE customer_id='123'"
+    - "Seq Scan on orders"
 
   metrics:
-    cpu: 35
-    memory: 52
-    db_connections: 100
-    request_latency_ms: 4500
+    cpu: 91
+    memory: 47
+    db_connections: 34
+    request_latency_ms: 8123
 
 expected_outputs:
 
@@ -47,12 +48,12 @@ expected_outputs:
     owner: payments-api-team
 
   rca:
-    root_cause: PostgreSQL connection pool exhaustion
+    root_cause: Missing database index causing slow SQL query
 
   remediation:
-    - Increase connection pool size
-    - Investigate connection leaks
-    - Restart affected application pods
+    - Add an index on customer_id
+    - Analyze execution plan
+    - Optimize the SQL query
 
   validation:
     passed: true

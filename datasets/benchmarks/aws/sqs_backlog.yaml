@@ -1,0 +1,62 @@
+id: AWS-002
+
+name: AWS SQS Message Backlog
+
+description: |
+  An SQS queue backlog is growing rapidly because downstream consumer workers
+  are failing to process messages due to connection resets with the external SMTP server.
+
+tags:
+  - aws
+  - sqs
+  - queue
+  - messaging
+  - backlog
+
+difficulty: medium
+
+source: synthetic
+version: 1
+
+metadata:
+  author: chethan
+  created_at: "2026-06-30"
+  notes: "SQS backlog spike caused by SMTP connection failures"
+
+incident:
+  service: email-delivery-queue
+  severity: medium
+  region: us-east-1
+  metric_name: QueueMessagesVisible
+  threshold: 1000
+  current_value: 12500
+
+evidence:
+  logs:
+    - "ApproximateNumberOfMessagesVisible: 12500"
+    - "Worker failed to process message: Connection reset by peer (smtp.gmail.com)"
+    - "DeadLetterQueue received 140 messages in last 5 minutes"
+
+  metrics:
+    queue_messages_visible: 12500
+    messages_deleted_per_min: 15
+    messages_sent_per_min: 240
+    request_latency_ms: 0
+
+expected_outputs:
+
+  triage:
+    severity: medium
+    category: aws
+    owner: customer-comms-team
+
+  rca:
+    root_cause: Downstream consumer workers failing to delete messages due to SMTP gateway errors, resulting in a growing SQS queue backlog.
+
+  remediation:
+    - Investigate SMTP gateway credentials, network egress, and rate limiters
+    - Scale up consumer worker pods to accelerate message draining once SMTP is healthy
+    - Configure exponential backoff and jitter for SMTP connections in workers
+
+  validation:
+    passed: true

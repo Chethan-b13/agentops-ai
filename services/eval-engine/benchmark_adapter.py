@@ -18,9 +18,9 @@ class BenchmarkAdapter:
             region=benchmark.incident.region,
 
             # Synthetic benchmark values
-            metric_name="benchmark",
-            threshold=1,
-            current_value=1,
+            metric_name=benchmark.incident.metric_name or "benchmark",
+            threshold=benchmark.incident.threshold if benchmark.incident.threshold is not None else 1.0,
+            current_value=benchmark.incident.current_value if benchmark.incident.current_value is not None else 1.0,
 
             severity="unknown",
             source="benchmark",
