@@ -19,14 +19,24 @@ def main():
         dataset = langfuse.get_dataset(dataset_name)
         print(f"Dataset '{dataset_name}' already exists.")
     except Exception:
-        dataset = langfuse.create_dataset(name=dataset_name, description="Incident Triage and RCA Benchmarks")
+        dataset = langfuse.create_dataset(
+            name=dataset_name,
+            description=(
+                "Production-style synthetic incident benchmarks used to "
+                "evaluate the AgentOps AI autonomous incident response workflow. "
+                "Each dataset item contains incident context, evidence, and "
+                "expected triage, RCA, remediation, and validation outputs."
+            ),
+        )
         print(f"Created new dataset '{dataset_name}'.")
 
     # Get existing items to avoid duplicates
-    existing_benchmark_ids = set()
-    for item in dataset.items:
-        if isinstance(item.input, dict) and "id" in item.input:
-            existing_benchmark_ids.add(item.input["id"])
+    existing_benchmark_ids = {
+        item.input.get("id")
+        for item in dataset.items
+        if isinstance(item.input, dict)
+        and item.input.get("id")
+    }
 
     discovery = BenchmarkDiscovery()
     loader = BenchmarkLoader()
@@ -70,14 +80,25 @@ def main():
             langfuse.create_dataset_item(
                 dataset_name=dataset_name,
                 input=item_input,
-                expected_output=item_expected
+                expected_output=item_expected,
+                metadata={
+                    "benchmark_id": benchmark.id,
+                    "benchmark_name": benchmark.name,
+                    "category": benchmark.expected_outputs.triage.category,
+                    "service": benchmark.incident.service,
+                    "severity": benchmark.incident.severity,
+                    "difficulty": benchmark.difficulty,
+                    "tags": benchmark.tags,
+                    "version": benchmark.version,
+                },
             )
             uploaded_count += 1
             print(f"✓ Uploaded {benchmark.id}")
             
         except Exception as e:
             print(f"❌ Failed to upload benchmark from {bm_path}: {e}")
-            
+
+    langfuse.flush() 
     print(f"\nUpload complete! Uploaded {uploaded_count} new benchmarks to Langfuse.")
 
 if __name__ == "__main__":

@@ -66,13 +66,24 @@ def run_dataset_eval(experiment_name: str):
         
         # 1. Create a Langfuse trace for this run
         trace = langfuse.trace(
-            name="Incident Workflow",
+            name=f"{benchmark.id} | {benchmark.name}",
             user_id="eval-engine",
+            input={
+                "benchmark": benchmark.model_dump(
+                    exclude={"expected_outputs"}
+                )
+            },
             metadata={
                 "benchmark_id": benchmark.id,
+                "benchmark_name": benchmark.name,
+                "category": benchmark.expected_outputs.triage.category,
+                "service": benchmark.incident.service,
                 "difficulty": benchmark.difficulty,
-                "experiment_name": experiment_name,
-            }
+                "provider": settings.llm_provider,
+                "model": _active_model,
+                "prompt_version": config.prompt_version,
+                "experiment": experiment_name,
+            },
         )
         
         # 2. Link this trace to the dataset item and the experiment name
@@ -131,7 +142,19 @@ def run_dataset_eval(experiment_name: str):
                 name="latency",
                 value=latency_ms,
             )
-            
+
+            output = result.model_dump()
+
+            output["evaluation"] = {
+                "score": evaluation["score"],
+                "passed": evaluation["passed"],
+                "reasoning": evaluation["reasoning"],
+            }
+
+            trace.update(
+                output=output,
+            )
+                        
         except Exception as e:
             print(f"   ❌ Failed: {e}")
             langfuse.score(
