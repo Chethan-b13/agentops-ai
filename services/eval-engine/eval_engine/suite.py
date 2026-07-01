@@ -1,11 +1,12 @@
-from benchmark_discovery import BenchmarkDiscovery
-from benchmark_runner import BenchmarkRunner
-from console import Console
-from json_report_generator import JsonReportGenerator
-from report_generator import ReportGenerator
-from run_state import RunState
+from eval_engine.discovery import BenchmarkDiscovery
+from eval_engine.runner import BenchmarkRunner
+from eval_engine.console import Console
+from eval_engine.reporting.json_report import JsonReportGenerator
+from eval_engine.reporting.html_report import ReportGenerator
+from eval_engine.run_state import RunState
 
 from shared.evaluation import EvaluationConfig
+from shared.settings import settings
 
 
 class BenchmarkSuite:
@@ -24,10 +25,18 @@ class BenchmarkSuite:
 
         Console.header()
 
+        # Resolve provider + model from env (LLM_PROVIDER / GEMINI_MODEL / OLLAMA_MODEL)
+        _active_model = (
+            settings.gemini_model
+            if settings.llm_provider == "gemini"
+            else settings.ollama_model
+        )
         config = EvaluationConfig(
-            model="qwen3:8b",
+            model=_active_model,
+            provider=settings.llm_provider,
             prompt_version="v1",
         )
+        print(f"🤖 LLM Provider : {settings.llm_provider.upper()} ({_active_model})")
 
         benchmarks = self.discovery.discover(
             benchmark_dir

@@ -48,7 +48,7 @@ expected_outputs:
     owner: orders-api-team
 
   rca:
-    root_cause: Database deadlock between concurrent transactions
+    root_cause: Two concurrent database transactions are deadlocked on a ShareLock, each waiting for the other to release its row lock, causing queries to fail and request latency to spike.
 
   remediation:
     - Retry aborted transactions

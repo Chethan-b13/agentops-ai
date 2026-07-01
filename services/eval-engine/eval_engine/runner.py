@@ -3,10 +3,10 @@ import time
 
 from sqlalchemy.orm import Session
 
-from benchmark_loader import BenchmarkLoader
-from benchmark_adapter import BenchmarkAdapter
-from evaluator import Evaluator
-from console import Console
+from eval_engine.loader import BenchmarkLoader
+from eval_engine.adapter import BenchmarkAdapter
+from eval_engine.evaluator import Evaluator
+from eval_engine.console import Console
 
 from shared.database.session import SessionLocal
 from shared.services import IncidentProcessingService

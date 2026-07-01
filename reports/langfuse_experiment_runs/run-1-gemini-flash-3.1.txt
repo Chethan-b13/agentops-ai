@@ -1,0 +1,112 @@
+(agentops-ai) chethanb@Admins-MacBook-Pro-3 eval-engine % uv run python run_langfuse_evals.py
+Installed 57 packages in 64ms
+Initializing Langfuse client...
+Fetching Langfuse dataset 'agentops-incident-benchmarks'...
+🤖 LLM Provider : GEMINI (gemini-3.1-flash-lite)
+
+🚀 Running experiments on 'agentops-incident-benchmarks' (Experiment Run: 'run_1782931577')
+Total benchmarks: 25
+----------------------------------------
+[1/25] Running Benchmark: RD-003 - Redis Service Down
+Created incident: INC-f32b4562
+   ✓ Executed workflow. Score: 0.60 | Passed: False
+   Reasoning: The predicted answer correctly identifies the core issue (Redis connection failure) but lacks the specific context provided in the expected answer, such as the master being down/unreachable and the impact on the auth-api service.
+[2/25] Running Benchmark: RD-002 - Redis Memory Eviction
+Created incident: INC-2757a0c6
+   ✓ Executed workflow. Score: 0.60 | Passed: False
+   Reasoning: The predicted answer correctly identifies the root cause (Redis memory exhaustion) but fails to mention the specific consequence (volatile-lru eviction of active user session tokens) which was a key part of the expected answer.
+[3/25] Running Benchmark: RD-004 - Redis Hot Key Contention
+Created incident: INC-fe773674
+   ✓ Executed workflow. Score: 0.10 | Passed: False
+   Reasoning: The predicted answer identifies a database connection pool issue, which is a different architectural bottleneck than the specific Redis hot key contention described in the expected answer.
+[4/25] Running Benchmark: RD-001 - Redis Cache Stampede
+Created incident: INC-a44497a1
+   ✓ Executed workflow. Score: 0.30 | Passed: False
+   Reasoning: The predicted answer identifies database connection pool exhaustion as the primary issue, whereas the expected answer identifies a cache stampede. While a cache stampede can lead to database load, they are distinct architectural problems, and the prediction misses the specific root cause of the cache stampede.
+[5/25] Running Benchmark: NET-003 - Downstream Service Timeout
+Created incident: INC-f1b52094
+   ✓ Executed workflow. Score: 0.85 | Passed: True
+   Reasoning: The predicted answer correctly identifies the root cause (latency in the user-profile-service) but lacks the specific detail regarding the 2000ms gateway timeout boundary mentioned in the expected answer.
+[6/25] Running Benchmark: NET-001 - Networking DNS Failure
+Created incident: INC-6459a7f2
+   ✓ Executed workflow. Score: 0.60 | Passed: False
+   Reasoning: The predicted answer correctly identifies the symptom (DNS resolution failure) but fails to identify the root cause (CoreDNS pod crash in kube-system), which is the critical piece of information provided in the expected answer.
+[7/25] Running Benchmark: NET-002 - ALB 5XX Response Spike
+Created incident: INC-583424e4
+   ✓ Executed workflow. Score: 0.00 | Passed: False
+   Reasoning: The predicted answer identifies a database connection issue, which is unrelated to the expected answer regarding ALB health check failures caused by backend instances refusing HTTP connections.
+[8/25] Running Benchmark: K8S-004 - Pending Pods Resource Exhaustion
+Created incident: INC-b2e593ea
+   ✓ Executed workflow. Score: 0.85 | Passed: True
+   Reasoning: The predicted answer correctly identifies the root cause (resource exhaustion), although it is less descriptive than the expected answer which specifies the impact on Pod state and the specific resource types involved.
+[9/25] Running Benchmark: K8S-003 - Container OOMKilled
+Created incident: INC-a40d5c24
+   ✓ Executed workflow. Score: 0.85 | Passed: True
+   Reasoning: The predicted answer correctly identifies the root cause (memory exhaustion/OOMKilled) but lacks the specific context of the exit code and the 512MB limit mentioned in the expected answer.
+[10/25] Running Benchmark: K8S-002 - Pod ImagePullBackOff
+Created incident: INC-f40eff50
+   ✓ Executed workflow. Score: 0.85 | Passed: True
+   Reasoning: The predicted answer correctly identifies the root cause as an invalid image reference, which aligns with the expected answer's description of a non-existent image tag, although it lacks the specific detail of the tag version.
+[11/25] Running Benchmark: K8S-001 - Pod CrashLoopBackOff
+Created incident: INC-c966e3fd
+   ✓ Executed workflow. Score: 0.40 | Passed: False
+   Reasoning: The predicted answer identifies the symptom (crash loop) but fails to identify the root cause (missing ConfigMap/Secret file) which was explicitly provided in the expected answer.
+[12/25] Running Benchmark: DEP-002 - Feature Flag Misconfiguration
+Created incident: INC-55178139
+   ✓ Executed workflow. Score: 0.60 | Passed: False
+   Reasoning: The predicted answer correctly identifies the root cause as a malformed response, but it is too generic. The expected answer specifically identifies the feature flag 'new-checkout-flow' as the source of the issue.
+[13/25] Running Benchmark: DEP-003 - Configuration Drift
+Created incident: INC-bf39e7f7
+   ✓ Executed workflow. Score: 0.90 | Passed: True
+   Reasoning: The predicted answer correctly identifies the root cause as an IAM permission misconfiguration, which aligns with the expected answer, although it is less detailed regarding the specific service and error.
+[14/25] Running Benchmark: DEP-001 - Regression in Code Deployment
+Created incident: INC-a45d0d12
+   ✓ Executed workflow. Score: 0.60 | Passed: False
+   Reasoning: The predicted answer correctly identifies the version and the nature of the regression, but incorrectly identifies the error type as a NullPointerException instead of an AttributeError, which is a significant technical inaccuracy in the context of Python.
+[15/25] Running Benchmark: DB-002 - Slow SQL Query
+Created incident: INC-010a9eae
+   ✓ Executed workflow. Score: 0.30 | Passed: False
+   Reasoning: The predicted answer identifies a symptom (connection pool exhaustion) rather than the root cause (missing index on customer_id) specified in the expected answer. It fails to address the specific technical bottleneck described.
+[16/25] Running Benchmark: DB-005 - PostgreSQL Replication Lag
+Created incident: INC-8545bb5e
+   ✓ Executed workflow. Score: 0.00 | Passed: False
+   Reasoning: The predicted answer identifies a completely different root cause (connection pool exhaustion) than the expected answer (WAL replay lag on a read replica). There is no overlap in the diagnosis.
+[17/25] Running Benchmark: DB-003 - Missing Database Index
+Created incident: INC-c9a12eb2
+   ✓ Executed workflow. Score: 0.00 | Passed: False
+   Reasoning: The predicted answer identifies a database connection pool issue, which is a symptom of performance degradation, but it fails to identify the root cause specified in the expected answer, which is a missing database index on the email column.
+[18/25] Running Benchmark: DB-004 - PostgreSQL Deadlock
+Created incident: INC-3dd3a1db
+   ✓ Executed workflow. Score: 0.60 | Passed: False
+   Reasoning: The predicted answer correctly identifies the core issue as a database deadlock, but it incorrectly attributes the symptom to connection pool exhaustion rather than the specific mechanism of ShareLock contention and row-level locking described in the expected answer.
+[19/25] Running Benchmark: DB-001 - Database Connection Pool Exhaustion
+Created incident: INC-9a0d5f3e
+   ✓ Executed workflow. Score: 0.85 | Passed: True
+   Reasoning: The predicted answer correctly identifies the core issue (PostgreSQL connection pool exhaustion) but lacks the specific detail regarding the capacity (100 connections) and the resulting symptom (request timeouts) provided in the expected answer.
+[20/25] Running Benchmark: AWS-002 - AWS SQS Message Backlog
+Created incident: INC-04f894d6
+   ✓ Executed workflow. Score: 0.70 | Passed: False
+   Reasoning: The predicted answer correctly identifies the core issue of processing failure and message accumulation, but it lacks the specific context regarding the SMTP gateway connection resets, which is a critical detail in the expected answer.
+[21/25] Running Benchmark: AWS-001 - AWS Lambda Function Timeout
+Created incident: INC-d0533ff0
+   ✓ Executed workflow. Score: 0.20 | Passed: False
+   Reasoning: The predicted answer incorrectly identifies the root cause as database connection exhaustion, whereas the expected answer specifies a timeout due to a large batch payload processing duration.
+[22/25] Running Benchmark: AWS-003 - AWS EventBridge Target Invocation Failure
+Created incident: INC-7595347e
+   ✓ Executed workflow. Score: 0.20 | Passed: False
+   Reasoning: The predicted answer incorrectly identifies the issue as resource exhaustion or a general configuration error, whereas the expected answer specifically identifies a missing or incorrect resource-based policy preventing the necessary IAM permissions for EventBridge to invoke the Lambda function.
+[23/25] Running Benchmark: AWS-004 - AWS CloudWatch Alarm Storm
+Created incident: INC-b9377cc3
+   ✓ Executed workflow. Score: 0.20 | Passed: False
+   Reasoning: The predicted answer identifies a different root cause (connection pool exhaustion) than the expected answer (database lock timeout). While both relate to database issues, they are distinct technical problems.
+[24/25] Running Benchmark: APP-002 - Application Thread Pool Exhaustion
+Created incident: INC-0ff072a6
+   ✓ Executed workflow. Score: 0.60 | Passed: False
+   Reasoning: The predicted answer identifies the symptom (thread pool exhaustion) but fails to mention the root cause (synchronous blocking calls to a slow external partner), which was the core of the expected answer.
+[25/25] Running Benchmark: APP-001 - Application Memory Leak
+Created incident: INC-c80669e9
+   ✓ Executed workflow. Score: 0.70 | Passed: False
+   Reasoning: The predicted answer correctly identifies a memory leak but misses the specific root cause (node image processing buffer cache) and the specific symptom (data not being garbage collected), instead focusing on the secondary effect of garbage collection overhead.
+----------------------------------------
+Experiment Run 'run_1782931577' completed. Passed 6/25 benchmarks.
+View the results, comparisons, and full traces in your Langfuse UI (http://localhost:3000)

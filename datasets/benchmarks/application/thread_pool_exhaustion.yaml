@@ -35,6 +35,7 @@ evidence:
     - "java.util.concurrent.RejectedExecutionException: Task rejected from java.util.concurrent.ThreadPoolExecutor"
     - "All 200 worker threads in thread pool are active/busy"
     - "Request queue size exceeded maximum limit (1000)"
+    - "Waiting for response from report-generator-api.partner.com: elapsed 9800ms, timeout 10000ms"
 
   metrics:
     cpu: 42

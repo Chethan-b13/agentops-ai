@@ -51,7 +51,7 @@ expected_outputs:
     owner: customer-comms-team
 
   rca:
-    root_cause: Downstream consumer workers failing to delete messages due to SMTP gateway errors, resulting in a growing SQS queue backlog.
+    root_cause: SQS consumer workers are failing to send emails due to connection resets with the SMTP gateway (smtp.gmail.com), causing messages to remain visible in the queue and grow into a backlog.
 
   remediation:
     - Investigate SMTP gateway credentials, network egress, and rate limiters

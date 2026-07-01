@@ -51,7 +51,7 @@ expected_outputs:
     owner: platform-infra-team
 
   rca:
-    root_cause: Redis master instance crashed or is unreachable due to container failure.
+    root_cause: Redis master is down or unreachable, causing connection refused errors and complete loss of connectivity from the auth-api service.
 
   remediation:
     - Verify Redis container status and restart the daemon/service

@@ -1,4 +1,4 @@
-from benchmark_suite import BenchmarkSuite
+from eval_engine.suite import BenchmarkSuite
 
 BenchmarkSuite().run(
     "../../datasets/benchmarks"

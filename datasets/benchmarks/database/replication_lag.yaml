@@ -48,7 +48,7 @@ expected_outputs:
     owner: platform-database-team
 
   rca:
-    root_cause: PostgreSQL replication lag caused by WAL replay backlog
+    root_cause: The PostgreSQL read replica has fallen 52 seconds behind the primary due to a WAL replay backlog, causing stale reads and elevated query latency in the reporting-api.
 
   remediation:
     - Investigate replica health

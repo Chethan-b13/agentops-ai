@@ -37,6 +37,8 @@ evidence:
     - "ALARM: 'payments-api-error-rate-high' in us-east-1"
     - "ALARM: 'sqs-delay-high-payments-queue' in us-east-1"
     - "ALARM: 'database-cpu-utilization-100%' in us-east-1"
+    - "PostgreSQL: lock wait timeout exceeded; retry your query"
+    - "ERROR: canceling statement due to lock timeout on table 'payments'"
 
   metrics:
     alarm_count: 14
@@ -52,7 +54,7 @@ expected_outputs:
     owner: core-payments-team
 
   rca:
-    root_cause: A blocking database lock cascaded upstream, saturating database CPU and triggering downstream error and latency alarms.
+    root_cause: A database lock timeout on the payments table saturated database CPU and cascaded upstream, triggering a storm of downstream error and latency alarms across the payments platform.
 
   remediation:
     - Locate and terminate the blocking database lock process

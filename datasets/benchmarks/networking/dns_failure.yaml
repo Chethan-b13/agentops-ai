@@ -35,6 +35,7 @@ evidence:
     - "getaddrinfo ENOTFOUND api.stripe.com"
     - "Temporary failure in name resolution: checkout-api cannot connect to stripe"
     - "Could not resolve host: api.stripe.com"
+    - "CoreDNS pod coredns-f9fd979d4-x2zgj is in CrashLoopBackOff state in kube-system"
 
   metrics:
     cpu: 12
@@ -50,7 +51,7 @@ expected_outputs:
     owner: core-networking-team
 
   rca:
-    root_cause: CoreDNS scheduling issues or resolver failure inside the Kubernetes cluster blocking external name resolution.
+    root_cause: A CoreDNS pod crash in the kube-system namespace is causing DNS resolution failures cluster-wide, preventing checkout-api from resolving external endpoints like api.stripe.com.
 
   remediation:
     - Verify CoreDNS pods are running, healthy, and scaled adequately in the kube-system namespace

@@ -2,7 +2,7 @@ from langchain_core.messages import HumanMessage
 
 from shared.llm.client import LLMClient
 
-from judge.judge_schema import JudgeResult
+from eval_engine.judge.judge_schema import JudgeResult
 
 
 class LLMJudge:

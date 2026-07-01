@@ -48,7 +48,7 @@ expected_outputs:
     owner: payments-api-team
 
   rca:
-    root_cause: Missing database index causing slow SQL query
+    root_cause: A missing index on the customer_id column of the orders table is causing full sequential scans, resulting in 8-second query execution times and high database CPU utilization.
 
   remediation:
     - Add an index on customer_id

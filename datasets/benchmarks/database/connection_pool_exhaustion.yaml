@@ -48,7 +48,7 @@ expected_outputs:
     owner: payments-api-team
 
   rca:
-    root_cause: PostgreSQL connection pool exhaustion
+    root_cause: PostgreSQL connection pool is fully exhausted — all 100 connections are in use — causing new application requests to time out waiting for an available connection slot.
 
   remediation:
     - Increase connection pool size

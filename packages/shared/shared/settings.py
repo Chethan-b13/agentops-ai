@@ -12,9 +12,16 @@ class Settings(BaseSettings):
     github_token: str
     github_repository: str
 
+    # LLM Provider: "ollama" | "gemini"
+    llm_provider: str = "ollama"
+
     # Ollama
     ollama_model: str = "qwen3:8b"
     ollama_base_url: str = "http://localhost:11434"
+
+    # Google Gemini (free-tier: 15 RPM, 500 RPD)
+    google_api_key: str = ""
+    gemini_model: str = "gemini-3.1-flash-lite"
 
     # AWS
     sqs_queue_url: str = (

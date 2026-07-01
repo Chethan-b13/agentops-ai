@@ -1,7 +1,7 @@
 from shared.evaluation import Benchmark
 from shared.evaluation import WorkflowResult
 
-from judge.llm_judge import LLMJudge
+from eval_engine.judge.llm_judge import LLMJudge
 
 
 class Evaluator:

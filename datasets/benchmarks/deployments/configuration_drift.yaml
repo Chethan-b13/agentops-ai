@@ -48,7 +48,7 @@ expected_outputs:
     owner: security-ops-team
 
   rca:
-    root_cause: Manual deletion of IAM policy attachment in AWS IAM console resulting in configuration drift from Terraform and permission denial.
+    root_cause: IAM policy permissions for the inventory-app user have been removed or misconfigured, causing all DynamoDB BatchWriteItem calls to fail with AccessDeniedException.
 
   remediation:
     - Run Terraform apply to detect configuration drift and redeploy the IAM policy
