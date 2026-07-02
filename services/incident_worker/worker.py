@@ -1,4 +1,5 @@
 import json
+from rich import print as rprint
 
 import boto3
 
@@ -104,7 +105,7 @@ def main():
                     config=config,
                 )
 
-                print(state)
+                rprint(state)
 
                 print(
                     f"Graph invoked for {incident.id}"

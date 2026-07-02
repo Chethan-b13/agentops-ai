@@ -21,6 +21,11 @@ class LLMJudge:
 
         Compare the expected answer with the predicted answer.
 
+        Use the following evaluation criteria and weighting:
+        - Component match (50%): does the predicted root cause name the correct component/service or subsystem?
+        - Mechanism match (30%): does the predicted root cause identify the concrete failure mechanism (e.g. missing policy, memory leak in buffer cache, blocking external call)?
+        - Symptom/context match (20%): does the prediction mention the key symptom or effect described in the expected answer (e.g. GC not collecting, timeout, AccessDenied)?
+
         Expected:
         {expected}
 

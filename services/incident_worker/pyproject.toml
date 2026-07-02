@@ -4,6 +4,7 @@ version = "0.1.0"
 
 dependencies = [
     "boto3>=1.43.36",
+    "rich>=15.0.0",
     "shared",
     "workflows",
 ]

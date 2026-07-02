@@ -1,7 +1,30 @@
 {
   "completed": [
+    "alb_5xx_spike",
+    "bad_deployment",
+    "cache_stampede",
+    "cloudwatch_alarm_storm",
+    "configuration_drift",
     "connection_pool_exhaustion",
-    "slow_query"
+    "crashloopbackoff",
+    "deadlock",
+    "dns_failure",
+    "eventbridge_failure",
+    "feature_flag_misconfiguration",
+    "hot_key_contention",
+    "imagepullbackoff",
+    "lambda_timeout",
+    "memory_eviction",
+    "memory_leak",
+    "missing_index",
+    "oomkilled",
+    "pending_pods",
+    "redis_down",
+    "replication_lag",
+    "service_timeout",
+    "slow_query",
+    "sqs_backlog",
+    "thread_pool_exhaustion"
   ],
   "results": [
     {
@@ -17,6 +40,167 @@
       "score": 0.95,
       "passed": true,
       "latency_ms": 271808.9968750719
+    },
+    {
+      "id": "APP-001",
+      "name": "Application Memory Leak",
+      "score": 0.7,
+      "passed": false,
+      "latency_ms": 19246.3101670146
+    },
+    {
+      "id": "APP-002",
+      "name": "Application Thread Pool Exhaustion",
+      "score": 0.6,
+      "passed": false,
+      "latency_ms": 16706.8302500993
+    },
+    {
+      "id": "AWS-004",
+      "name": "AWS CloudWatch Alarm Storm",
+      "score": 0.2,
+      "passed": false,
+      "latency_ms": 35470.08095891215
+    },
+    {
+      "id": "AWS-003",
+      "name": "AWS EventBridge Target Invocation Failure",
+      "score": 0.2,
+      "passed": false,
+      "latency_ms": 21804.46183308959
+    },
+    {
+      "id": "AWS-001",
+      "name": "AWS Lambda Function Timeout",
+      "score": 0.2,
+      "passed": false,
+      "latency_ms": 24077.059166971594
+    },
+    {
+      "id": "AWS-002",
+      "name": "AWS SQS Message Backlog",
+      "score": 0.7,
+      "passed": false,
+      "latency_ms": 16246.810625074431
+    },
+    {
+      "id": "DB-004",
+      "name": "PostgreSQL Deadlock",
+      "score": 0.6,
+      "passed": false,
+      "latency_ms": 21759.143624920398
+    },
+    {
+      "id": "DB-003",
+      "name": "Missing Database Index",
+      "score": 0.0,
+      "passed": false,
+      "latency_ms": 29851.772958878428
+    },
+    {
+      "id": "DB-005",
+      "name": "PostgreSQL Replication Lag",
+      "score": 0.0,
+      "passed": false,
+      "latency_ms": 16890.00133308582
+    },
+    {
+      "id": "DEP-001",
+      "name": "Regression in Code Deployment",
+      "score": 0.6,
+      "passed": false,
+      "latency_ms": 26952.09970907308
+    },
+    {
+      "id": "DEP-003",
+      "name": "Configuration Drift",
+      "score": 0.9,
+      "passed": true,
+      "latency_ms": 16634.724542032927
+    },
+    {
+      "id": "DEP-002",
+      "name": "Feature Flag Misconfiguration",
+      "score": 0.6,
+      "passed": false,
+      "latency_ms": 17018.20020796731
+    },
+    {
+      "id": "K8S-001",
+      "name": "Pod CrashLoopBackOff",
+      "score": 0.4,
+      "passed": false,
+      "latency_ms": 26343.58008392155
+    },
+    {
+      "id": "K8S-002",
+      "name": "Pod ImagePullBackOff",
+      "score": 0.85,
+      "passed": true,
+      "latency_ms": 22334.769958164543
+    },
+    {
+      "id": "K8S-003",
+      "name": "Container OOMKilled",
+      "score": 0.85,
+      "passed": true,
+      "latency_ms": 21181.421124842018
+    },
+    {
+      "id": "K8S-004",
+      "name": "Pending Pods Resource Exhaustion",
+      "score": 0.85,
+      "passed": true,
+      "latency_ms": 16210.089041851461
+    },
+    {
+      "id": "NET-002",
+      "name": "ALB 5XX Response Spike",
+      "score": 0.0,
+      "passed": false,
+      "latency_ms": 16292.299333028495
+    },
+    {
+      "id": "NET-001",
+      "name": "Networking DNS Failure",
+      "score": 0.6,
+      "passed": false,
+      "latency_ms": 20748.82245901972
+    },
+    {
+      "id": "NET-003",
+      "name": "Downstream Service Timeout",
+      "score": 0.2,
+      "passed": false,
+      "latency_ms": 28810.508334077895
+    },
+    {
+      "id": "RD-001",
+      "name": "Redis Cache Stampede",
+      "score": 0.3,
+      "passed": false,
+      "latency_ms": 14663.483749842271
+    },
+    {
+      "id": "RD-004",
+      "name": "Redis Hot Key Contention",
+      "score": 0.1,
+      "passed": false,
+      "latency_ms": 16782.491374993697
+    },
+    {
+      "id": "RD-002",
+      "name": "Redis Memory Eviction",
+      "score": 0.6,
+      "passed": false,
+      "latency_ms": 21656.50000004098
+    },
+    {
+      "id": "RD-003",
+      "name": "Redis Service Down",
+      "score": 0.6,
+      "passed": false,
+      "latency_ms": 22917.55370912142
     }
   ]
 }
