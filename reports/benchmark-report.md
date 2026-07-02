@@ -1,15 +1,15 @@
 # 🚀 AgentOps AI Benchmark Report
 
-Generated: 2026-07-02 21:51:03
+Generated: 2026-07-02 22:32:38
 
 ## Summary
 
 | Metric | Value |
 |--------|------:|
 | Benchmarks | 25 |
-| Passed | 6 |
-| Failed | 19 |
-| Accuracy | 24% |
+| Passed | 13 |
+| Failed | 12 |
+| Accuracy | 52% |
 
 ---
 
@@ -17,28 +17,28 @@ Generated: 2026-07-02 21:51:03
 
 | Benchmark | Score | Latency | Status |
 |-----------|-------|---------|--------|
-| DB-001 | 0.95 | 317283 ms | ✅ PASS |
-| DB-002 | 0.95 | 271809 ms | ✅ PASS |
-| APP-001 | 0.70 | 19246 ms | ❌ FAIL |
-| APP-002 | 0.60 | 16707 ms | ❌ FAIL |
-| AWS-004 | 0.20 | 35470 ms | ❌ FAIL |
-| AWS-003 | 0.20 | 21804 ms | ❌ FAIL |
-| AWS-001 | 0.20 | 24077 ms | ❌ FAIL |
-| AWS-002 | 0.70 | 16247 ms | ❌ FAIL |
-| DB-004 | 0.60 | 21759 ms | ❌ FAIL |
-| DB-003 | 0.00 | 29852 ms | ❌ FAIL |
-| DB-005 | 0.00 | 16890 ms | ❌ FAIL |
-| DEP-001 | 0.60 | 26952 ms | ❌ FAIL |
-| DEP-003 | 0.90 | 16635 ms | ✅ PASS |
-| DEP-002 | 0.60 | 17018 ms | ❌ FAIL |
-| K8S-001 | 0.40 | 26344 ms | ❌ FAIL |
-| K8S-002 | 0.85 | 22335 ms | ✅ PASS |
-| K8S-003 | 0.85 | 21181 ms | ✅ PASS |
-| K8S-004 | 0.85 | 16210 ms | ✅ PASS |
-| NET-002 | 0.00 | 16292 ms | ❌ FAIL |
-| NET-001 | 0.60 | 20749 ms | ❌ FAIL |
-| NET-003 | 0.20 | 28811 ms | ❌ FAIL |
-| RD-001 | 0.30 | 14663 ms | ❌ FAIL |
-| RD-004 | 0.10 | 16782 ms | ❌ FAIL |
-| RD-002 | 0.60 | 21657 ms | ❌ FAIL |
-| RD-003 | 0.60 | 22918 ms | ❌ FAIL |
+| APP-001 | 0.85 | 24539 ms | ✅ PASS |
+| APP-002 | 0.50 | 16539 ms | ❌ FAIL |
+| AWS-004 | 0.30 | 32548 ms | ❌ FAIL |
+| AWS-003 | 0.20 | 25703 ms | ❌ FAIL |
+| AWS-001 | 0.20 | 18228 ms | ❌ FAIL |
+| AWS-002 | 0.20 | 23743 ms | ❌ FAIL |
+| DB-001 | 0.90 | 16888 ms | ✅ PASS |
+| DB-004 | 0.50 | 16167 ms | ❌ FAIL |
+| DB-003 | 0.90 | 15526 ms | ✅ PASS |
+| DB-005 | 0.30 | 21900 ms | ❌ FAIL |
+| DB-002 | 0.85 | 17745 ms | ✅ PASS |
+| DEP-001 | 0.95 | 15165 ms | ✅ PASS |
+| DEP-003 | 0.90 | 26685 ms | ✅ PASS |
+| DEP-002 | 0.90 | 16770 ms | ✅ PASS |
+| K8S-001 | 0.40 | 32294 ms | ❌ FAIL |
+| K8S-002 | 0.90 | 16282 ms | ✅ PASS |
+| K8S-003 | 0.85 | 26826 ms | ✅ PASS |
+| K8S-004 | 0.90 | 24091 ms | ✅ PASS |
+| NET-002 | 0.60 | 23455 ms | ❌ FAIL |
+| NET-001 | 0.50 | 16920 ms | ❌ FAIL |
+| NET-003 | 0.85 | 15392 ms | ✅ PASS |
+| RD-001 | 0.40 | 16478 ms | ❌ FAIL |
+| RD-004 | 0.20 | 16101 ms | ❌ FAIL |
+| RD-002 | 0.90 | 24047 ms | ✅ PASS |
+| RD-003 | 0.90 | 16638 ms | ✅ PASS |
